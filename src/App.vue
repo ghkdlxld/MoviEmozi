@@ -1,12 +1,34 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div id="nav" class="d-flex justify-content-between">
+      <router-link :to="{ name: 'Home'}">Home</router-link>
+      <div class="d-flex">
+        <!-- Community => 자유, Review, 건의 -->
+        <router-link :to="{ name: 'Community'}" class="mx-2">Community</router-link>  |
+
+        <router-link :to="{ name: 'Board' }" class="mx-2">Board</router-link> |
+        <router-link :to="{ name: 'Question' }" class="mx-2">1:1 문의</router-link>  |
+
+        <!-- profile drop down => profile logout / signup login -->
+        <the-profile-bar></the-profile-bar>
+      </div>
     </div>
     <router-view/>
   </div>
 </template>
+
+<script>
+import TheProfileBar from '@/components/TheProfileBar'
+
+export default {
+  name: 'App',
+  components: {
+    TheProfileBar
+  }
+}
+</script>
+
+
 
 <style>
 #app {
