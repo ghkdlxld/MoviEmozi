@@ -23,8 +23,24 @@ export default {
       'reviewLists',
     ])
   },
+  methods:{
+    CreateReviewDetail:function(context,reviewId){
+      axios({
+        method:'get',
+        url:`http://127.0.0.1:8000/community/${reviewId}/review_detail/`,
+
+      })
+      .then(res=>{
+        console.log(res)
+
+      })
+      .catch(err=>{
+        console.log(err)
+      })
+    }
+  },
   created: function(){
-    
+  
   }
 }
 </script>
