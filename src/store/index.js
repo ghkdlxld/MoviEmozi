@@ -38,6 +38,25 @@ export default new Vuex.Store({
       })
     }
   },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+충돌이 날까????
+
+
+
+
   modules: {
   }
 })

@@ -1,25 +1,27 @@
 <template>
   <div>
-    <h2>Boxoffice Top 10</h2>
+    <h2 class="text-white">Boxoffice Top 10</h2>
+    <div class="container">
       <carousel-3d  
       :controls-visible="true" 
       :controls-prev-html="'&#10092;'" 
       :controls-next-html="'&#10093;'" 
-      :controls-width="20" 
-      :controls-height="70" 
+      :width="200" :height="400"
       :clickable="false"
       v-if="topTenMovie">
         <slide 
         v-for="(slide, i) in slides" 
         :index="i"
         :key="i"
-        style="width: 200px;"
+        style="height: 285px;"
+        class="border border-dark"
         >
           <figure>
             <img :src="`https://image.tmdb.org/t/p/original/${topTenPosterPath[i]}`">
           </figure>
         </slide>
       </carousel-3d>
+    </div>
   </div>
 </template>
 
@@ -36,7 +38,7 @@ export default {
   data: function() {
     return {
       topTenMovie: [],
-      topTenPosterPath: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      topTenPosterPath: [],
       slides: 10
     }
   },
@@ -57,26 +59,25 @@ export default {
       method: 'get',
       url: `http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchWeeklyBoxOfficeList.json?key=${KOFIC_API}&targetDt=${today}&weekGb=0`,
     })
-      .then(res => {
-        // console.log(res.data.boxOfficeResult.weeklyBoxOfficeList)
-        for (const boxofficeobj of res.data.boxOfficeResult.weeklyBoxOfficeList) {
-          var boxOfficeMovie = JSON.parse(JSON.stringify(boxofficeobj))
-          this.topTenMovie.push(boxOfficeMovie.movieNm)
-        }
-      // console.log(this.topTenMovie)
-
-      for (const movie of this.topTenMovie) {
-        axios({
-          method: 'get',
-          url: `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API}&language=ko-KR&page=1&include_adult=false&query=${movie}`
-        })
-        .then(res => {
-          this.topTenPosterPath[this.topTenMovie.indexOf(movie)] = JSON.parse(JSON.stringify(res.data.results[0].poster_path))
-        })
+    .then(res => {
+      // console.log(res.data.boxOfficeResult.weeklyBoxOfficeList)
+      for (const boxofficeobj of res.data.boxOfficeResult.weeklyBoxOfficeList) {
+        var boxOfficeMovie = JSON.parse(JSON.stringify(boxofficeobj))
+        this.topTenMovie.push(boxOfficeMovie.movieNm)
       }
-    })
-    console.log(this.topTenPosterPath)
-    console.log(this.topTenMovie)
+    // console.log(this.topTenMovie)
+
+    for (const movie of this.topTenMovie) {
+      axios({
+        method: 'get',
+        url: `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API}&language=ko-KR&page=1&include_adult=false&query=${movie}`
+      })
+      .then(res => {
+        this.topTenPosterPath.push(res.data.results[0].poster_path)
+        console.log(res.data.results[0].poster_path)
+      })
+    }
+  })
   }
 }
 </script>

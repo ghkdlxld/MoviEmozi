@@ -14,7 +14,10 @@ export default {
   components: {
     BoxOffice,
     MovieList,
+  },
+  created() {
+
+    }
   }
 }
 </script>
-

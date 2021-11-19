@@ -1,8 +1,13 @@
 <template>
-  <div>
-    <input 
-    @keyup.enter="searchMovie"
-    type="text">
+  <div class="container">
+    <div class="d-flex justify-content-end">
+      <input
+      class="form-control"
+      @keyup.enter="searchMovie"
+      type="text"
+      style="width: 250px;"
+      >
+    </div>
   </div>
 </template>
 
