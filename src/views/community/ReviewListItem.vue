@@ -30,13 +30,14 @@
               <tr
                 v-for="review in DataList"
                 :key="review.id"
+                @click="moveToDetail(review.id)"
               >
                 <td>{{ review.id }}</td>
                 <td> 리뷰 </td>
                 <td>{{ review.title }}</td>
                 <td>{{review.user}}</td>
                 <td>{{review.movie_id}}</td>
-                <td>{{review.updated_at}}</td>
+                <td>{{review.updated_at |dateFormat}}</td>
               </tr>
             </tbody>
           </template>
@@ -65,6 +66,11 @@ export default {
       curPageNum:1,
     }
   },
+  methods:{
+    moveToDetail:function(reviewId){
+      this.$router.push({name:'ReviewDetail', params: {reviewId:reviewId}})
+    }
+  },
   computed:{
     startOffset(){
       return ((this.curPageNum-1) * this.dataPerPage)
@@ -78,7 +84,27 @@ export default {
     DataList(){
       return this.reviewList.slice(this.startOffset, this.endOffset)
     }
-  }
+  },
+  filters:{
+    dateFormat:function(value){
+      if (value===""){
+        return ''
+      }
+      const date = new Date(value)
+      const year = date.getFullYear()
+      var month = date.getMonth() + 1
+      var day = date.getDate()
+      var hour = date.getHours()
+      var minute = date.getMinutes()
+
+      hour = (hour>12) ? 'PM' +' '+(hour-12) : 'AM' +' '+hour
+      month = (month<10) ? '0'+month : month
+      day = (day<10) ? '0'+day : day
+      minute = (minute<10)? '0'+minute : minute
+      
+      return year + '-' + month+'-'+day+' '+hour+':'+minute;
+    }
+  },
 }
 </script>
 
