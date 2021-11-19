@@ -1,19 +1,18 @@
 <template>
   <div>
-    <h2 class="text-white">Boxoffice Top 10</h2>
+    <h1 class="text-white">Boxoffice Top 10</h1>
     <div class="container">
       <carousel-3d  
       :controls-visible="true" 
       :controls-prev-html="'&#10092;'" 
       :controls-next-html="'&#10093;'" 
-      :width="200" :height="400"
+      :height="485" :width="340"
       :clickable="false"
       v-if="topTenMovie">
         <slide 
         v-for="(slide, i) in slides" 
         :index="i"
         :key="i"
-        style="height: 285px;"
         class="border border-dark"
         >
           <figure>
@@ -74,7 +73,6 @@ export default {
       })
       .then(res => {
         this.topTenPosterPath.push(res.data.results[0].poster_path)
-        console.log(res.data.results[0].poster_path)
       })
     }
   })

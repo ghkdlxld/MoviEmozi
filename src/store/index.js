@@ -9,6 +9,8 @@ export default new Vuex.Store({
     boardLists : null,
     reviewLists : null,
     boardNum : {'1': '자유', '2':'건의', '3':'영화 추천','4':'파티 모집'},
+
+    movieList: null,
   },
   mutations: {
     CREATE_CHAT_LIST:function(state, chatlst){
@@ -17,6 +19,12 @@ export default new Vuex.Store({
     CREATE_REVIEW_LIST:function(state, reviewlst){
       state.reviewLists = reviewlst
     },
+
+
+    LOAD_MOVIE_LIST: function(state, movielist){
+      state.movieList = movielist
+      console.log(movielist)
+    }
   },
   actions: {
     CreateChatBoard:function({commit}){
@@ -37,6 +45,18 @@ export default new Vuex.Store({
         commit('CREATE_REVIEW_LIST', res.data)
       })
     },
+
+
+
+    loadMovieList: function({commit}) {
+      axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8000/movies/',
+      })
+      .then(res => {
+        commit('LOAD_MOVIE_LIST', res.data)
+      })
+    }
     
 
     

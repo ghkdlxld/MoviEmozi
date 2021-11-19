@@ -16,6 +16,7 @@ export default {
     MovieList,
   },
   created: function() {
+    this.$store.dispatch('loadMovieList')
   }
 }
 </script>

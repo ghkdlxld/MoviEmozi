@@ -54,7 +54,6 @@ const routes = [
     name: 'Logout',
     component: Logout
   },
-  
 ]
 
 const router = new VueRouter({
