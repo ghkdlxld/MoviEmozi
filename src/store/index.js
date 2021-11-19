@@ -37,11 +37,14 @@ export default new Vuex.Store({
         state.userNameList.push(user.username)
       })
     },
+    LOGOUT:function(state){
+      state.config = null
+      state.isLogin = false
+      console.log(state.config)
+
+    },
     LOGIN:function(state){
       state.isLogin = true
-    },
-    LOGOUT:function(state){
-      state.isLogin = false
     },
 
 
@@ -67,7 +70,7 @@ export default new Vuex.Store({
     CreateChatBoard:function(context){
       axios({
         method:'get',
-        url:'http://127.0.0.1:8000/community/chats/',
+        url:'http://127.0.0.1:8000/community/chats_list/',
         headers: context.state.config
       })
       .then(res=>{
@@ -97,11 +100,11 @@ export default new Vuex.Store({
         context.commit('CREATE_USER_NAME_LIST', res.data)
       })
     },
-    Login:function({commit}){
-      commit('LOGIN')
-    },
     Logout:function({commit}){
       commit('LOGOUT')
+    },
+    Login:function({commit}){
+      commit('LOGIN')
     },
     setToken:function({commit}){
       const token = localStorage.getItem('jwt')
@@ -126,7 +129,7 @@ export default new Vuex.Store({
     getShortMent: function({commit}, movie_pk) {
       axios({
         method: 'get',
-        url: `http://127.0.0.1:8000/movies/${movie_pk}/shortment/`,
+        url: `http://127.0.0.1:8000/movies/${movie_pk}/shortment_list/`,
       })
       .then(res =>{
         commit('GET_SHORT_MENT', res.data)

@@ -25,9 +25,10 @@ export default {
   },
   methods:{
     logout:function(){
+      this.$emit('logout')
       localStorage.removeItem('jwt')
       this.$router.push({name:'Login'})
-      this.$store.dispath('Logout')
+      this.$store.dispatch('Logout')
     }
   }
 }

@@ -11,7 +11,7 @@
         <the-profile-bar></the-profile-bar>
       </div>
     </div>
-    <router-view @login="isLogin=true"/>
+    <router-view @login="isLogin=true" @logout="isLogin=false"/>
   </div>
 </template>
 
@@ -29,7 +29,6 @@ export default {
       }
   },
   methods: {
-
 
   },
   created:function(){
