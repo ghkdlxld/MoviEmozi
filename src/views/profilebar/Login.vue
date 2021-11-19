@@ -39,6 +39,8 @@ export default {
       })
       .then((res) =>{
         localStorage.setItem('jwt', res.data.token)
+        this.$emit('login')
+        this.$store.dispatch('setToken')
         this.$store.dispatch('Login')
         this.$router.push({name:'Home'})
       })

@@ -25,11 +25,12 @@ export default {
     filtering:function(){
       const questions = []
 
+      if (this.boardLists){
       this.boardLists.forEach(num=>{
         if (num.board_num === '2'){
           questions.push(num)
         }
-      })
+      })}
       return questions
     }
   },

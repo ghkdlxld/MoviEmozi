@@ -20,6 +20,7 @@ export default new Vuex.Store({
     userNameList : [0,],
     boardNum : {'1': '자유', '2':'건의', '3':'영화 추천','4':'파티 모집'},
     isLogin : false,
+    config : null,
 
     movieList: null,
     shortments: null,
@@ -54,37 +55,46 @@ export default new Vuex.Store({
     ADD_SHORTMENT: function(state, shortment){
       state.shortments.push(shortment)
       console.log(shortment)
+    },
+    SET_TOKEN:function(state,config){
+      state.config = config
     }
 
 
 
   },
   actions: {
-    CreateChatBoard:function({commit}){
+    CreateChatBoard:function(context){
       axios({
         method:'get',
         url:'http://127.0.0.1:8000/community/chats/',
+        headers: context.state.config
       })
       .then(res=>{
-        commit('CREATE_CHAT_LIST',res.data)
+        context.commit('CREATE_CHAT_LIST',res.data)
+      })
+      .catch(err=>{
+        console.log(err)
       })
     },
-    CreateReviewBoard:function({commit}){
+    CreateReviewBoard:function(context){
       axios({
         method:'get',
         url:'http://127.0.0.1:8000/community/reviews',
+        headers: context.state.config
       })
       .then(res=>{
-        commit('CREATE_REVIEW_LIST', res.data)
+        context.commit('CREATE_REVIEW_LIST', res.data)
       })
     },
-    CreateUserList:function({commit}){
+    CreateUserList:function(context){
       axios({
         method:'get',
         url:'http://127.0.0.1:8000/accounts/userlist',
+        headers: context.state.config
       })
       .then(res=>{
-        commit('CREATE_USER_NAME_LIST', res.data)
+        context.commit('CREATE_USER_NAME_LIST', res.data)
       })
     },
     Login:function({commit}){
@@ -92,6 +102,13 @@ export default new Vuex.Store({
     },
     Logout:function({commit}){
       commit('LOGOUT')
+    },
+    setToken:function({commit}){
+      const token = localStorage.getItem('jwt')
+      const config = {
+        Authorization : `JWT ${token}`
+      }
+      commit('SET_TOKEN', config)
     },
     
 

@@ -11,7 +11,7 @@
         <the-profile-bar></the-profile-bar>
       </div>
     </div>
-    <router-view/>
+    <router-view @login="isLogin=true"/>
   </div>
 </template>
 
@@ -23,8 +23,21 @@ export default {
   components: {
     TheProfileBar
   },
-  methods: {
+  data:function(){
+    return{
+      isLogin : false
+      }
   },
+  methods: {
+
+
+  },
+  created:function(){
+    if (localStorage.getItem('jwt')){
+      this.isLogin = true
+      this.$store.dispatch('setToken')
+    }
+  }
 }
 </script>
 
