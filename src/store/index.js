@@ -36,7 +36,17 @@ export default new Vuex.Store({
       .then(res=>{
         commit('CREATE_REVIEW_LIST', res.data)
       })
+    },
+    CreateChatDetail:function(context,chatId){
+      axios({
+        method:'get',
+        url:`http://127.0.0.1:8000/community/${chatId}/chat_detail/`,
+      })
+      .then(res=>{
+        console.log(res)
+      })
     }
+    
   },
 
 

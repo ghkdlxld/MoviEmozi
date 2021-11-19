@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class = "container">
     <h3>1:1 문의</h3>
     <hr>
     <board-list-item

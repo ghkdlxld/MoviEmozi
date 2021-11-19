@@ -25,7 +25,7 @@ export default {
   },
   methods:{
     chatsCreate:function(){
-      
+
     }
   },
 
@@ -37,7 +37,7 @@ export default {
       const questions = []
       if (this.boardLists){
       this.boardLists.forEach(num=>{
-        if (num.board_num === '1'){
+        if (num.board_num != '2'){
           questions.push(num)
         }
       })
