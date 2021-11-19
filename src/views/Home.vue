@@ -15,9 +15,7 @@ export default {
     BoxOffice,
     MovieList,
   },
-  created() {
-
-    }
+  created: function() {
   }
 }
 </script>

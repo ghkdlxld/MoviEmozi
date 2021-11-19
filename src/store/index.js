@@ -45,28 +45,8 @@ export default new Vuex.Store({
       .then(res=>{
         console.log(res)
       })
-    }
-    
+    },
   },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-충돌이 날까????
-
-
-
-
   modules: {
   }
 })
