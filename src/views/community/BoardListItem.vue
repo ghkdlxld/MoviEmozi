@@ -24,15 +24,17 @@
               </tr>
             </thead>
             <tbody>
+              
               <tr
                 v-for="board in DataList"
                 :key="board.id"
-              >
+                @click="moveToDetail(board.id)"
+              > 
                 <td>{{ board.id }}</td>
                 <td>{{ boardNum[board.board_num] }}</td>
                 <td>{{ board.title }}</td>
                 <td>{{board.user}}</td>
-                <td>{{board.updated_at}}</td>
+                <td>{{board.updated_at | dateFormat}}</td>
               </tr>
             </tbody>
           </template>
@@ -61,6 +63,12 @@ export default {
       curPageNum:1,
     }
   },
+  methods:{
+    moveToDetail:function(chatId){
+      this.$router.push({name:'BoardDetail', params: {chatId:chatId}})
+    },
+    
+  },
   computed:{
     ...mapState([
       'boardNum'
@@ -77,7 +85,28 @@ export default {
     DataList(){
       return this.boardList.slice(this.startOffset, this.endOffset)
     },
-  }
+  },
+  filters:{
+    dateFormat:function(value){
+      if (value===""){
+        return ''
+      }
+      const date = new Date(value)
+      const year = date.getFullYear()
+      var month = date.getMonth() + 1
+      var day = date.getDate()
+      var hour = date.getHours()
+      var minute = date.getMinutes()
+
+      hour = (hour>12) ? 'PM' +' '+(hour-12) : 'AM' +' '+hour
+      month = (month<10) ? '0'+month : month
+      day = (day<10) ? '0'+day : day
+      minute = (minute<10)? '0'+minute : minute
+      
+      const res =  `${year} - ${month} - ${day} ${hour} : ${minute}`
+      return res
+    }
+  },
   
 
 }

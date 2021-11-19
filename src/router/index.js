@@ -7,6 +7,8 @@ import Signup from '@/views/profilebar/Signup.vue'
 import Login from '@/views/profilebar/Login.vue'
 import MyProfile from '@/views/profilebar/MyProfile.vue'
 import Logout from '@/views/profilebar/Logout.vue'
+import BoardDetail from '@/views/community/BoardDetail.vue'
+import ReviewDetail from '@/views/community/ReviewDetail.vue'
 
 Vue.use(VueRouter)
 
@@ -21,6 +23,17 @@ const routes = [
     path: '/community',
     name: 'Community',
     component: Community
+  },
+  // 게시판 상세 페이지
+  {
+    path:'/community/:chatId/detail',
+    name: 'BoardDetail',
+    component: BoardDetail
+  },
+  {
+    path:'/community/:reviewId/detail',
+    name: 'ReviewDetail',
+    component: ReviewDetail
   },
   // 1:1 건의
   {

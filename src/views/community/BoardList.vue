@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>자유 게시판</h3>
+    <h3 style="color:white">자유 게시판</h3>
     <v-row>
       <v-col cols="auto">
       <v-btn tile outlined color="success" @click="chatsCreate">Create</v-btn>
@@ -26,7 +26,8 @@ export default {
   methods:{
     chatsCreate:function(){
 
-    }
+    },
+    
   },
 
   computed:{

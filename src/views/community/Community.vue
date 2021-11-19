@@ -1,12 +1,12 @@
 <template>
   <div>
-    <v-btn tile outlined color="success" class="mx-2" @click="board">
+    <v-btn tile outlined color="primary" class="mx-2" style="color:white;" @click="board">
       자유 게시판
     </v-btn>
-    <v-btn tile outlined color="success" class="mx-2" @click="review">
+    <v-btn tile outlined color="success" class="mx-2" style="color:white;" @click="review">
       리뷰 게시판
     </v-btn>
-    <v-btn tile outlined color="success" class="mx-2" @click="questions">
+    <v-btn tile outlined color="success" class="mx-2" style="color:white;" @click="questions">
       건의 게시판
     </v-btn>
     <div class="my-4 container">
@@ -58,4 +58,5 @@ export default {
 </script>
 
 <style>
+
 </style>
