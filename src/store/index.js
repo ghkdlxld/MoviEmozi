@@ -8,7 +8,7 @@ export default new Vuex.Store({
   state: {
     boardLists : null,
     reviewLists : null,
-    boardNum : {'1': '자유', '2':'건의', '3':'영화 추천','4':'파티 모집'}
+    boardNum : {'1': '자유', '2':'건의', '3':'영화 추천','4':'파티 모집'},
   },
   mutations: {
     CREATE_CHAT_LIST:function(state, chatlst){
@@ -16,7 +16,7 @@ export default new Vuex.Store({
     },
     CREATE_REVIEW_LIST:function(state, reviewlst){
       state.reviewLists = reviewlst
-    }
+    },
   },
   actions: {
     CreateChatBoard:function({commit}){
@@ -37,32 +37,11 @@ export default new Vuex.Store({
         commit('CREATE_REVIEW_LIST', res.data)
       })
     },
-    CreateChatDetail:function(context,chatId){
-      axios({
-        method:'get',
-        url:`http://127.0.0.1:8000/community/${chatId}/chat_detail/`,
-      })
-      .then(res=>{
-        console.log(res)
-      })
-    }
+    
+
     
   },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-충돌이 날까????
 
 
 
