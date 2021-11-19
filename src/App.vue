@@ -22,7 +22,9 @@ export default {
   name: 'App',
   components: {
     TheProfileBar
-  }
+  },
+  methods: {
+  },
 }
 </script>
 
