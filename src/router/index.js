@@ -6,9 +6,9 @@ import QuestionList from '@/views/community/QuestionList.vue'
 import Signup from '@/views/profilebar/Signup.vue'
 import Login from '@/views/profilebar/Login.vue'
 import MyProfile from '@/views/profilebar/MyProfile.vue'
-import Logout from '@/views/profilebar/Logout.vue'
 import BoardDetail from '@/views/community/BoardDetail.vue'
 import ReviewDetail from '@/views/community/ReviewDetail.vue'
+import ReviewList from '@/views/community/ReviewList.vue'
 
 Vue.use(VueRouter)
 
@@ -23,6 +23,11 @@ const routes = [
     path: '/community',
     name: 'Community',
     component: Community
+  },
+  {
+    path:'/review',
+    name:'ReviewList',
+    component:ReviewList
   },
   // 게시판 상세 페이지
   {
@@ -61,11 +66,6 @@ const routes = [
     path: '/profilebar/myprofile',
     name: 'MyProfile',
     component: MyProfile
-  },
-  {
-    path: '/profilebar/logout',
-    name: 'Logout',
-    component: Logout
   },
 ]
 

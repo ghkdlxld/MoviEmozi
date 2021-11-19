@@ -53,6 +53,14 @@ export default {
   created: function(){
     this.$store.dispatch('CreateChatBoard')
     this.$store.dispatch('CreateReviewBoard')
+    this.$store.dispatch('CreateUserList')
+    if (this.$route.query.board === 'question'){
+      this.questions()
+    } else if (this.$route.query.board === 'chat'){
+      this.board()
+    } else {
+      this.review()
+    }
   }
 }
 </script>

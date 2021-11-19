@@ -1,15 +1,43 @@
 <template>
-  <div class="container" style="color:white;">
-    <h1 class="d-flex">Title:{{detail.title}}</h1>
-      <h5 class="d-flex">작성자 : {{detail.user}}</h5>
-      <div class="d-flex">
-        <p>수정시각 : {{detail.updated_at | dateFormat}}</p>
+    <div class="container" style="color:white;" v-if="detail">
+    <div align="left">
+      <v-btn id="back" @click="moveToList">
+          <v-icon left>
+            mdi-arrow-left
+          </v-icon>목록
+        </v-btn>
+    </div>
+    <hr>
+    <div align='left'>
+    <span style="font-size:30px">Title: {{detail.title}} </span>
+      <v-btn id="edit">
+        <v-icon left>mdi-pencil</v-icon><b> Edit</b>
+      </v-btn>
+      <p>수정시각 : {{detail.updated_at | dateFormat}}</p>
+      <div id="user">작성자 : {{detail.user}} </div>
+    </div>
+    <br>
+      <div class="my-3" align='left'>
+        <div id="content">내용 :  </div>
+        {{detail.content}}
       </div>
+      <br>
+      <div align="right"> 
+      <v-btn id="delete" class="my-2 ma-2">
+        <v-icon left> mdi-delete</v-icon> <b>Delete</b>
+      </v-btn>
+      </div>
+      <hr>
+      <div>
+      <board-detail-comment :board_pk="detail.id"></board-detail-comment>
+      </div>
+      
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import {mapState} from 'vuex'
 
 export default {
   name:"ReviewDetail",
@@ -17,6 +45,11 @@ export default {
     return{
       detail : null,
     }
+  },
+  computed:{
+    ...mapState([
+      'userNameList'
+    ])
   },
   methods:{
     CreateReviewDetail:function(reviewId){
@@ -33,6 +66,10 @@ export default {
       .catch(err=>{
         console.log(err)
       })
+    },
+    moveToList:function(){
+        this.$router.push({name:'Community', query:{board:'review'}})
+        
     }
   },
     filters:{

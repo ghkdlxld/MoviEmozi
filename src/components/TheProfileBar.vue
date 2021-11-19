@@ -7,10 +7,10 @@
 
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
         <li><router-link :to="{ name: 'Signup'}" class="dropdown-item" >Signup</router-link></li>
-        <li><router-link :to="{ name: 'Login'}" class="dropdown-item" >Login</router-link></li>
+        <li><router-link :to="{ name: 'Login'}" class="dropdown-item">Login</router-link></li>
 
         <li><router-link :to="{ name: 'MyProfile'}" class="dropdown-item" >My Profile</router-link></li>
-        <li><router-link :to="{ name: 'Logout'}" class="dropdown-item" >Logout</router-link></li>
+        <li><router-link to="." class="dropdown-item" @click.native="logout">Logout</router-link></li>
       </ul>
     </div>
   </div>
@@ -19,6 +19,17 @@
 <script>
 export default {
   name: 'TheProfileBar',
+  data: function(){
+    return{
+    }
+  },
+  methods:{
+    logout:function(){
+      localStorage.removeItem('jwt')
+      this.$router.push({name:'Login'})
+      this.$store.dispath('Logout')
+    }
+  }
 }
 </script>
 

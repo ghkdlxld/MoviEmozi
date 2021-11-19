@@ -1,26 +1,49 @@
 <template>
   <div class="container" style="color:white;" v-if="detail">
-    <h1 class="d-flex">Title: {{detail.title}} </h1>
+    <div align="left">
+      <v-btn id="back" @click="moveToList">
+          <v-icon left>
+            mdi-arrow-left
+          </v-icon>목록
+        </v-btn>
+    </div>
+    <hr>
+    <div align='left'>
+    <span style="font-size:30px">Title: {{detail.title}} </span>
+      <v-btn id="edit">
+        <v-icon left>mdi-pencil</v-icon><b> Edit</b>
+      </v-btn>
+      <p class="my-0">등록시각 : {{detail.created_at | dateFormat}}</p>
+      <p>수정시각 : {{detail.updated_at | dateFormat}}</p>
+      <div id="user">작성자 : {{detail.user}} </div>
+    </div>
     <br>
-      <div id="user">작성자 : {{detail.user}} 
-          <v-btn id="edit">
-            <v-icon left>mdi-pencil</v-icon> Edit
-          </v-btn>
-        </div>
-        <br>
-        <p>수정시각 : {{detail.updated_at | dateFormat}}</p>
-      <content>
-        <item style="float:left">내용 :  </item>
-        <br>
+      <div class="my-3" align='left'>
+        <div id="content">내용 :  </div>
         {{detail.content}}
-      </content>
+      </div>
+      <br>
+      <div align="right"> 
+      <v-btn id="delete" class="my-2 ma-2">
+        <v-icon left> mdi-delete</v-icon> <b>Delete</b>
+      </v-btn>
+      </div>
+      <hr>
+      <div>
+      <board-detail-comment :board_pk="detail.id"></board-detail-comment>
+      </div>
+      
   </div>
 </template>
 
 <script>
+import BoardDetailComment from './BoardDetailComment.vue'
 import axios from 'axios'
 export default {
   name:"BoardDetail",
+  components:{
+    BoardDetailComment
+  },
   data:function(){
     return{
       detail:null,
@@ -44,7 +67,7 @@ export default {
       minute = (minute<10)? '0'+minute : minute
       
       return year + '-' + month+'-'+day+' '+hour+':'+minute;
-    }
+    },
   },
   methods:{
     CreateChatDetail:function(chatId){
@@ -61,6 +84,14 @@ export default {
         console.log(err)
       })
     },
+    moveToList:function(){
+      if (this.detail.board_num === "2" ){
+        this.$router.push({name:"Community", query:{board:'question'}})
+        } else{
+        this.$router.push({name:"Community", query:{board:'chat'}})
+      }
+      
+    }
   },
   created: function(){
     this.CreateChatDetail()
@@ -81,10 +112,20 @@ p {
 
 #edit{
   float: right;
+  background-color: #558B2F;
 }
 
-content{
+#delete{
+  background-color:#E53935;
+  color:black;
+}
+
+#back{
+  background-color: violet;
+  color:black
+}
+
+#content{
   font-size: 15px;
-  float:left;
 }
 </style>

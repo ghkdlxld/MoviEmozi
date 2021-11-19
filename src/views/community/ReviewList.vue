@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3> 리뷰 게시판 </h3>
+    <h3 style="color:white"> 리뷰 게시판 </h3>
     <hr>
     <review-list-item
     :reviewList="reviewLists"

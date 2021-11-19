@@ -17,7 +17,9 @@ export default new Vuex.Store({
   state: {
     boardLists : null,
     reviewLists : null,
+    userNameList : [0,],
     boardNum : {'1': '자유', '2':'건의', '3':'영화 추천','4':'파티 모집'},
+    isLogin : false,
 
     movieList: null,
     shortments: null,
@@ -28,6 +30,17 @@ export default new Vuex.Store({
     },
     CREATE_REVIEW_LIST:function(state, reviewlst){
       state.reviewLists = reviewlst
+    },
+    CREATE_USER_NAME_LIST:function(state,list){
+      list.forEach(user=>{
+        state.userNameList.push(user.username)
+      })
+    },
+    LOGIN:function(state){
+      state.isLogin = true
+    },
+    LOGOUT:function(state){
+      state.isLogin = false
     },
 
 
@@ -65,6 +78,22 @@ export default new Vuex.Store({
         commit('CREATE_REVIEW_LIST', res.data)
       })
     },
+    CreateUserList:function({commit}){
+      axios({
+        method:'get',
+        url:'http://127.0.0.1:8000/accounts/userlist',
+      })
+      .then(res=>{
+        commit('CREATE_USER_NAME_LIST', res.data)
+      })
+    },
+    Login:function({commit}){
+      commit('LOGIN')
+    },
+    Logout:function({commit}){
+      commit('LOGOUT')
+    },
+    
 
 
 
