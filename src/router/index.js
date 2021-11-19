@@ -2,8 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Community from '@/views/community/Community.vue'
-import Board from '@/views/community/Board.vue'
-import Question from '@/views/community/Question.vue'
+import QuestionList from '@/views/community/QuestionList.vue'
 import Signup from '@/views/profilebar/Signup.vue'
 import Login from '@/views/profilebar/Login.vue'
 import MyProfile from '@/views/profilebar/MyProfile.vue'
@@ -23,17 +22,11 @@ const routes = [
     name: 'Community',
     component: Community
   },
-  // 자유게시판
-  {
-    path: '/community/board',
-    name: 'Board',
-    component: Board
-  },
   // 1:1 건의
   {
     path: '/community/question/',
-    name: 'Question',
-    component: Question
+    name: 'QuestionList',
+    component: QuestionList
   },
   // // 프로필 (signup, login / logout, myprofile)
   // {

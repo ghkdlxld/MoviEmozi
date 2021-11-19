@@ -5,9 +5,7 @@
       <div class="d-flex">
         <!-- Community => 자유, Review, 건의 -->
         <router-link :to="{ name: 'Community'}" class="mx-2">Community</router-link>  |
-
-        <router-link :to="{ name: 'Board' }" class="mx-2">Board</router-link> |
-        <router-link :to="{ name: 'Question' }" class="mx-2">1:1 문의</router-link>  |
+        <router-link :to="{ name: 'QuestionList' }" class="mx-2">1:1 문의</router-link>  |
 
         <!-- profile drop down => profile logout / signup login -->
         <the-profile-bar></the-profile-bar>
