@@ -35,7 +35,7 @@
                 <td>{{ review.id }}</td>
                 <td> 리뷰 </td>
                 <td>{{ review.title }}</td>
-                <td>{{review.user}}</td>
+                <td>{{userNameList[review.user]}}</td>
                 <td>{{review.movie_id}}</td>
                 <td>{{review.updated_at |dateFormat}}</td>
               </tr>
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 
 export default {
   name:"ReviewListItem",
@@ -72,6 +73,9 @@ export default {
     }
   },
   computed:{
+    ...mapState([
+      'userNameList',
+    ]),
     startOffset(){
       return ((this.curPageNum-1) * this.dataPerPage)
     },

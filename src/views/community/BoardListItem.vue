@@ -33,7 +33,7 @@
                 <td>{{ board.id }}</td>
                 <td>{{ boardNum[board.board_num] }}</td>
                 <td>{{ board.title }}</td>
-                <td>{{board.user}}</td>
+                <td>{{ userNameList[board.user]}}</td>
                 <td>{{board.updated_at | dateFormat}}</td>
               </tr>
             </tbody>
@@ -71,7 +71,8 @@ export default {
   },
   computed:{
     ...mapState([
-      'boardNum'
+      'boardNum',
+      'userNameList'
     ]),
     startOffset(){
       return ((this.curPageNum-1) * this.dataPerPage)

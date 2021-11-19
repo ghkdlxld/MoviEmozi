@@ -1,6 +1,6 @@
 <template>
   <div class = "container">
-    <h3>1:1 문의</h3>
+    <h3 style="color:white">1:1 문의</h3>
     <hr>
     <board-list-item
     :boardList="filtering"

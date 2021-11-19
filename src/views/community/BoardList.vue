@@ -3,7 +3,7 @@
     <h3 style="color:white">자유 게시판</h3>
     <v-row>
       <v-col cols="auto">
-      <v-btn tile outlined color="success" @click="chatsCreate">Create</v-btn>
+      <v-btn tile outlined dark @click="chatsCreate">Create</v-btn>
       </v-col>
     </v-row>
     <hr>
@@ -32,7 +32,8 @@ export default {
 
   computed:{
     ...mapState([
-      'boardLists'
+      'boardLists',
+      'userNameList',
     ]),
     filtering:function(){
       const questions = []
