@@ -6,13 +6,14 @@
 
 <script>
 import axios from 'axios'
+
 export default {
-  name:"BoardDetail",
+  name:"ReviewDetail",
   methods:{
-    CreateChatDetail:function(context,chatId){
+    CreateReviewDetail:function(context,reviewId){
       axios({
         method:'get',
-        url:`http://127.0.0.1:8000/community/${chatId}/chat_detail/`,
+        url:`http://127.0.0.1:8000/community/${reviewId}/review_detail/`,
 
       })
       .then(res=>{
@@ -21,10 +22,9 @@ export default {
       })
       .catch(err=>{
         console.log(err)
-
       })
-    },
-  }
+    }
+  },
 
 }
 </script>
