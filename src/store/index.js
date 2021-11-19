@@ -20,6 +20,7 @@ export default new Vuex.Store({
     boardNum : {'1': '자유', '2':'건의', '3':'영화 추천','4':'파티 모집'},
 
     movieList: null,
+    shortments: null,
   },
   mutations: {
     CREATE_CHAT_LIST:function(state, chatlst){
@@ -33,7 +34,17 @@ export default new Vuex.Store({
     LOAD_MOVIE_LIST: function(state, movielist){
       state.movieList = movielist
       console.log(movielist)
+    },
+    GET_SHORT_MENT: function(state, shortments){
+      state.shortments = shortments
+    },
+    ADD_SHORTMENT: function(state, shortment){
+      state.shortments.push(shortment)
+      console.log(shortment)
     }
+
+
+
   },
   actions: {
     CreateChatBoard:function({commit}){
@@ -65,7 +76,30 @@ export default new Vuex.Store({
       .then(res => {
         commit('LOAD_MOVIE_LIST', res.data)
       })
+    },
+    getShortMent: function({commit}, movie_pk) {
+      axios({
+        method: 'get',
+        url: `http://127.0.0.1:8000/movies/${movie_pk}/shortment/`,
+      })
+      .then(res =>{
+        commit('GET_SHORT_MENT', res.data)
+      })
+      .catch(() => {
+        console.log('아직 한줄평이 없습니다.')
+      })
+    },
+    addShortment: function({commit}, movie_pk, shortment) {
+      axios({
+        method: 'post',
+        url: `http://127.0.0.1:8000/movies/${movie_pk}/shortment/`,
+        data: shortment
+      })
+      .then(res => {
+        commit('ADD_SHORTMENT', res.data)
+      })
     }
+
     
 
     

@@ -9,7 +9,7 @@
           <span class="mx-2">장르 전체</span>
         </button>
         <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton2">
-          <li><a @click="gereFilter" class="dropdown-item" href="#">액션</a></li>
+          <li><a class="dropdown-item" href="#">액션</a></li>
           <li><a class="dropdown-item" href="#">모험</a></li>
           <li><a class="dropdown-item" href="#">코미디</a></li>
           <li><a class="dropdown-item" href="#">애니메이션</a></li>
