@@ -13,8 +13,8 @@
       <v-btn id="edit">
         <v-icon left>mdi-pencil</v-icon><b> Edit</b>
       </v-btn>
-      <p class="my-0">등록시각 : {{detail.created_at | dateFormat}}</p>
-      <p>수정시각 : {{detail.updated_at | dateFormat}}</p>
+      <p class="my-0">등록시각 : {{updated}}</p>
+      <p>수정시각 : {{created}}</p>
       <div id="user">작성자 : {{detail.user}} </div>
     </div>
     <br>
@@ -49,40 +49,21 @@ export default {
       detail:null,
     }
   },
-  filters:{
-    dateFormat:function(value){
-      if (value===""){
-        return ''
-      }
-      const date = new Date(value)
-      const year = date.getFullYear()
-      var month = date.getMonth() + 1
-      var day = date.getDate()
-      var hour = date.getHours()
-      var minute = date.getMinutes()
-
-      hour = (hour>12) ? 'PM' +' '+(hour-12) : 'AM' +' '+hour
-      month = (month<10) ? '0'+month : month
-      day = (day<10) ? '0'+day : day
-      minute = (minute<10)? '0'+minute : minute
-      
-      return year + '-' + month+'-'+day+' '+hour+':'+minute;
-    },
-  },
   methods:{
     CreateChatDetail:function(chatId){
       chatId = this.$route.params.chatId
       axios({
         method:'get',
         url:`http://127.0.0.1:8000/community/${chatId}/chat_detail/`,
-        
-
+        headers:this.$store.state.config
       })
       .then(res=>{
         this.detail = res.data
       })
       .catch(err=>{
-        console.log(err)
+        if (err.response.status === 401){
+          console.log(err)
+        }
       })
     },
     moveToList:function(){
@@ -96,6 +77,16 @@ export default {
   },
   created: function(){
     this.CreateChatDetail()
+  },
+  computed:{
+    updated : function(){
+      this.$store.dispatch('dateFormat',this.detail.updated_at)
+      return this.$store.state.date
+    },
+    created : function(){
+      this.$store.dispatch('dateFormat', this.detail.created_at)
+      return this.$store.state.date
+    }
   }
 
 }

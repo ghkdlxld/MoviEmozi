@@ -21,7 +21,8 @@ export default new Vuex.Store({
     boardNum : {'1': '자유', '2':'건의', '3':'영화 추천','4':'파티 모집'},
     isLogin : false,
     config : null,
-
+    date : null,          // yyyy-mm-dd PM/AM yy:mm 형식 출력
+    betweenDate : null,   // 몇분전, 방금전 등으로 출력
     movieList: null,
     shortments: null,
   },
@@ -60,6 +61,12 @@ export default new Vuex.Store({
     },
     SET_TOKEN:function(state,config){
       state.config = config
+    },
+    DATE_FILTER: function(state, date){
+      state.date = date
+    },
+    DATE_BETWEEN:function(state,date){
+      state.betweenDate = date
     }
 
 
@@ -153,10 +160,8 @@ export default new Vuex.Store({
       })
     },
 
-    dateFormat:function(value){
-      if (value===""){
-        return ''
-      }
+    // 게시글 작성시각을 yyyy-mm-dd AM yy:mm 형식으로 변환하여 출력
+    dateFormat:function({commit},value){
       const date = new Date(value)
       const year = date.getFullYear()
       var month = date.getMonth() + 1
@@ -169,7 +174,28 @@ export default new Vuex.Store({
       day = (day<10) ? '0'+day : day
       minute = (minute<10)? '0'+minute : minute
       
-      return year + '-' + month+'-'+day+' '+hour+':'+minute;
+      commit('DATE_FILTER',year + '-' + month+'-'+day+' '+hour+':'+minute)
+    },
+
+    // 댓글 작성시각 / 수정시각에 1일전, 2일전, 방금전 등으로 출력
+    betweenDate:function({commit}, value){
+      if (value===""){
+        return ''
+      }
+      const date = new Date(value)
+      const today = new Date()
+      const takenTime = today - date
+      const takenSecond = takenTime / 1000 
+      const takenMinute = takenSecond / 60
+      const takenHour = takenMinute / 60
+      const takenDay = takenHour / 24
+      const takenWeek = takenDay / 7
+
+      if (takenSecond < 60) {commit('DATE_BETWEEN','방금전'); return;}
+      if (takenMinute < 60) {commit('DATE_BETWEEN',`${Math.floor(takenMinute)}분 전`); return;} 
+      if (takenHour < 24) {commit('DATE_BETWEEN',`${Math.floor(takenHour)}시간 전`); return;}
+      if (takenDay < 7) {commit('DATE_BETWEEN',`${Math.floor(takenDay)}일 전`); return;}  
+      if (takenWeek < 5) {commit('DATE_BETWEEN',`${Math.floor(takenWeek)}주 전`); return;} 
     }
 
   },
