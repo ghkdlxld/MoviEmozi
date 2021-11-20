@@ -3,6 +3,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Vuetify from 'vuetify'
 import colors from 'vuetify/es5/util/colors'
+import createPersistedState from 'vuex-persistedstate'
+import userStore from './userStore';
+
 
 Vue.use(Vuex)
 Vue.use(Vuetify, {
@@ -13,7 +16,8 @@ Vue.use(Vuetify, {
   }
 })
 
-export default new Vuex.Store({
+
+const store = new Vuex.Store({
   state: {
     boardLists : null,
     reviewLists : null,
@@ -107,6 +111,7 @@ export default new Vuex.Store({
       })
     },
     Logout:function({commit}){
+      localStorage.removeItem()
       commit('LOGOUT')
     },
     Login:function({commit}){
@@ -196,13 +201,18 @@ export default new Vuex.Store({
       if (takenHour < 24) {commit('DATE_BETWEEN',`${Math.floor(takenHour)}시간 전`); return;}
       if (takenDay < 7) {commit('DATE_BETWEEN',`${Math.floor(takenDay)}일 전`); return;}  
       if (takenWeek < 5) {commit('DATE_BETWEEN',`${Math.floor(takenWeek)}주 전`); return;} 
-    }
+    },
 
   },
 
-
-
-
   modules: {
-  }
+    userStore: userStore
+  },
+  plugins: [
+    createPersistedState({
+      paths: ['userStore'],
+    })
+  ]
 })
+
+export default store;
