@@ -94,6 +94,9 @@ export default {
   },
   created: function(){
     this.CreateReviewDetail()
+  },
+  updated:function(){
+    this.$store.dispatch('CreateUserList')
   }
 
 }

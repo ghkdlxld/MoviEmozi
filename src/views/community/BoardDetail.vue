@@ -47,6 +47,8 @@ export default {
   data:function(){
     return{
       detail:null,
+      updated : null,
+      created : null,
     }
   },
   methods:{
@@ -59,6 +61,12 @@ export default {
       })
       .then(res=>{
         this.detail = res.data
+        
+        this.$store.dispatch('dateFormat',this.detail.updated_at)
+        this.updated = this.$store.state.date
+
+        this.$store.dispatch('dateFormat', this.detail.created_at)
+        this.created = this.$store.state.date
       })
       .catch(err=>{
         if (err.response.status === 401){
@@ -78,15 +86,8 @@ export default {
   created: function(){
     this.CreateChatDetail()
   },
-  computed:{
-    updated : function(){
-      this.$store.dispatch('dateFormat',this.detail.updated_at)
-      return this.$store.state.date
-    },
-    created : function(){
-      this.$store.dispatch('dateFormat', this.detail.created_at)
-      return this.$store.state.date
-    }
+  updated:function(){
+    this.$store.dispatch('CreateUserList')
   }
 
 }

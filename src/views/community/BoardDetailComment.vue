@@ -14,15 +14,36 @@
     <br>
     <hr>
     <div
-    v-for="comment in comment_list"
-    :key="comment.id"
+    v-for="(comment,index) in comment_list"
+    :key="index"
     >
-    <p style="text-align:left;">작성자: {{userNameList[comment.user]}}</p>
-    <span style="font-size:20px">{{comment.content}}</span>
-      <span id="time">
-        등록 : {{comment.created_at|dateFormat}} <br>
-        수정 : {{comment.updated_at|dateFormat}}
+      <p style="text-align:left;">
+        작성자: {{userNameList[comment.user]}}
+      <span>
+      <v-btn fab id="del" @click="DeleteComment(comment.id)">
+        <v-icon >mdi-trash-can</v-icon>
+      </v-btn>
       </span>
+      </p>
+
+    <div v-if="isUpdated[index] === false">
+    <span style="font-size:20px">{{comment.content}}</span>
+      <v-btn fab id="update" class="mx-2" @click="isupdated(index)">
+        <v-icon >mdi-pen</v-icon>
+      </v-btn>
+      <span id="time" class="my-1">
+        등록 : {{created_list[index]}} <br>
+        수정 : {{updated_list[index]}}
+      </span>
+    </div>
+      <div v-else>
+        <input type="text" style="width:85%; height:60px" 
+        id="editvalue" :value="comment.content" @keyup.enter="updateValue(comment.id,index)">
+      <v-btn type="button" class="mx-2" fab dark id="update" @click="updateValue(comment.id,index)">
+        <v-icon dark>mdi-plus</v-icon>
+      </v-btn>
+
+      </div>
     <br>
     <hr>
     </div>
@@ -44,23 +65,55 @@ export default {
     return{
       comment_list:null,
       value:null,
+      updated_value:null,
       loginRequest:false,
+      updated_list : [],
+      created_list : [],
+      isUpdated: null,
     }
   },
   computed:{
     ...mapState([
       'userNameList',
-    ])
+    ]),
   },
   methods:{
+    updateValue:function(Id,index){
+      const update = document.getElementById('editvalue').value
+      axios({
+        method:'put',
+        url:`http://127.0.0.1:8000/community/chat_comments/${Id}/`,
+        data: {content:update},
+        headers: this.$store.state.config
+      })
+      .then(()=>{
+        this.ImportComment()
+        let isupdated = [...this.isUpdated]
+        isupdated.splice(index,1,false)
+        this.isUpdated = isupdated
+      })
+      document.getElementById('editvalue').value = null
+    },
+    isupdated:function(index){
+      let isupdated = [...this.isUpdated]
+      isupdated.splice(index,1,true)
+      this.isUpdated = isupdated
+    },
     createComment:function(){
       var data = {content: this.value}
       const boardId = this.board_pk
-      axios.post(`http://127.0.0.1:8000/community/${boardId}/chat_comments/`, data, {headers: this.$store.state.config},
-      {xsrfCookieName: 'csrftoken', xsrfHeaderName: 'X-CSRFToken'})
+      axios({
+        method:'post',
+        url:`http://127.0.0.1:8000/community/${boardId}/chat_comments/`,
+        data, 
+        headers: this.$store.state.config
+      })
       .then(res=>{
-        console.log(res)
+        if (res.data){
+        this.ImportComment()
         this.loginRequest = false
+        this.value = null
+        }
       })
       .catch(err=>{
         if(err.response){
@@ -71,41 +124,44 @@ export default {
         }
 
       })
-    }
-  },
-  filters:{
-    dateFormat:function(value){
-      if (value===""){
-        return ''
-      }
-      const date = new Date(value)
-      const year = date.getFullYear()
-      var month = date.getMonth() + 1
-      var day = date.getDate()
-      var hour = date.getHours()
-      var minute = date.getMinutes()
-
-      hour = (hour>12) ? 'PM' +' '+(hour-12) : 'AM' +' '+hour
-      month = (month<10) ? '0'+month : month
-      day = (day<10) ? '0'+day : day
-      minute = (minute<10)? '0'+minute : minute
-      
-      return year + '-' + month+'-'+day+' '+hour+':'+minute;
     },
-
-  },
-  created:function(){
+    ImportComment : function(){
     const boardId = this.board_pk
     axios({
       method:'get',
-      url:`http://127.0.0.1:8000/community/${boardId}/chat_comments/`
+      url:`http://127.0.0.1:8000/community/${boardId}/chat_comments/`,
+      headers: this.$store.state.config
     })
     .then(res=>{
-      this.comment_list = res.data
+      this.comment_list = res.data 
+      this.isUpdated = Array(this.comment_list.length).fill(false)
+      this.updated_list = []
+      this.created_list = []
+      res.data.forEach(comment=>{
+        this.$store.dispatch('betweenDate',comment.updated_at)
+        this.updated_list.push(this.$store.state.betweenDate)
+
+        this.$store.dispatch('betweenDate', comment.created_at)
+        this.created_list.push(this.$store.state.betweenDate)
+      })
     })
     .catch(err=>{
       console.log(err)
-    })
+    })},
+
+    DeleteComment:function(Id){
+      axios({
+        method:'delete',
+        url:`http://127.0.0.1:8000/community/chat_comments/${Id}/`,
+        headers: this.$store.state.config
+      })
+      .then(()=>{
+        this.ImportComment()
+      })
+    }
+  },
+  created:function(){
+    this.ImportComment()
   }
 
 
@@ -126,6 +182,21 @@ input{
 #time{
   font-size:12px;
   float:right;
+}
+
+#del{
+  float: right;
+  width: 30px;
+  height: 30px;
+  color:black;
+  background-color: #B71C1C;
+}
+
+#update{
+  width:30px;
+  height: 30px;
+  color:black;
+  background-color: cadetblue;
 }
 
 </style>
