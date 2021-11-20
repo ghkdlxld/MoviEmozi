@@ -17,6 +17,11 @@ export default {
   },
   created: function() {
     this.$store.dispatch('loadMovieList')
+
+    if (localStorage.getItem('jwt')){
+      this.isLogin = true
+      this.$store.dispatch('setToken')
+    }
   }
 }
 </script>

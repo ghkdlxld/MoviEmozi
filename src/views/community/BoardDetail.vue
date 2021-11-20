@@ -13,9 +13,8 @@
       <v-btn id="edit">
         <v-icon left>mdi-pencil</v-icon><b> Edit</b>
       </v-btn>
-      <p class="my-0">등록시각 : {{detail.created_at | dateFormat}}</p>
-      <p>수정시각 : {{detail.updated_at | dateFormat}}</p>
-      {{'2021-10-16T14:08:50.298733+09:00' | dateFormat}}
+      <p class="my-0">등록시각 : {{updated}}</p>
+      <p>수정시각 : {{created}}</p>
       <div id="user">작성자 : {{detail.user}} </div>
     </div>
     <br>
@@ -50,41 +49,6 @@ export default {
       detail:null,
     }
   },
-  filters:{
-    dateFormat:function(value){
-      if (value===""){
-        return ''
-      }
-      const date = new Date(value)
-      const today = new Date()
-      const takenTime = today - date
-      const takenSecond = takenTime / 1000 
-      const takenMinute = takenSecond / 60
-      const takenHour = takenMinute / 60
-      const takenDay = takenHour / 24
-      const takenWeek = takenDay / 7
-
-      if (takenSecond < 60) return '방금전'
-      if (takenMinute < 60) return `${Math.floor(takenMinute)}분 전` 
-      if (takenHour < 24) return `${Math.floor(takenHour)}시간 전` 
-      if (takenDay < 7) return `${Math.floor(takenDay)}일 전`  
-      if (takenWeek < 5) return `${Math.floor(takenWeek)}주 전`   
-      
-      const year = date.getFullYear()
-      var month = date.getMonth() + 1
-      var day = date.getDate()
-      var hour = date.getHours()
-      var minute = date.getMinutes()
-      console.log(year, month)
-
-      hour = (hour>12) ? 'PM' +' '+(hour-12) : 'AM' +' '+hour
-      month = (month<10) ? '0'+month : month
-      day = (day<10) ? '0'+day : day
-      minute = (minute<10)? '0'+minute : minute
-      
-      return year + '-' + month+'-'+day+' '+hour+':'+minute;
-    },
-  },
   methods:{
     CreateChatDetail:function(chatId){
       chatId = this.$route.params.chatId
@@ -98,7 +62,7 @@ export default {
       })
       .catch(err=>{
         if (err.response.status === 401){
-          
+          console.log(err)
         }
       })
     },
@@ -113,6 +77,16 @@ export default {
   },
   created: function(){
     this.CreateChatDetail()
+  },
+  computed:{
+    updated : function(){
+      this.$store.dispatch('dateFormat',this.detail.updated_at)
+      return this.$store.state.date
+    },
+    created : function(){
+      this.$store.dispatch('dateFormat', this.detail.created_at)
+      return this.$store.state.date
+    }
   }
 
 }
