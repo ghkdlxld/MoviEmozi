@@ -57,7 +57,6 @@ export default new Vuex.Store({
     },
     ADD_SHORTMENT: function(state, shortment){
       state.shortments.push(shortment)
-      console.log(shortment)
     },
     SET_TOKEN:function(state,config){
       state.config = config
@@ -138,20 +137,41 @@ export default new Vuex.Store({
         console.log('아직 한줄평이 없습니다.')
       })
     },
-    addShortment: function({commit}, movie_pk, shortment) {
+    addShortment: function(context, data) {
+      const movieId = data.id
       axios({
         method: 'post',
-        url: `http://127.0.0.1:8000/movies/${movie_pk}/shortment/`,
-        data: shortment
+        url: `http://127.0.0.1:8000/movies/${movieId}/shortment/`,
+        data: {content : data.content},
+        headers: context.state.config, 
       })
       .then(res => {
-        commit('ADD_SHORTMENT', res.data)
+        context.commit('ADD_SHORTMENT', res.data)
       })
+      .catch(err => {
+        console.log(err)
+      })
+    },
+
+    dateFormat:function(value){
+      if (value===""){
+        return ''
+      }
+      const date = new Date(value)
+      const year = date.getFullYear()
+      var month = date.getMonth() + 1
+      var day = date.getDate()
+      var hour = date.getHours()
+      var minute = date.getMinutes()
+
+      hour = (hour>12) ? 'PM' +' '+(hour-12) : 'AM' +' '+hour
+      month = (month<10) ? '0'+month : month
+      day = (day<10) ? '0'+day : day
+      minute = (minute<10)? '0'+minute : minute
+      
+      return year + '-' + month+'-'+day+' '+hour+':'+minute;
     }
 
-    
-
-    
   },
 
 

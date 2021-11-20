@@ -25,6 +25,7 @@
 
 
     <!-- modal -->
+    <!-- header -->
     <div class="modal fade" :id="`exampleModal-${movieCard.id}`" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-fullscreen">
         <div class="modal-content container bg-dark" style="width:2000px; height:900px;">
@@ -33,6 +34,7 @@
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
+          <!-- body -->
           <div class="modal-body container">
             <div class="d-flex justify-content-between">
               <h3 class="text-start">{{ movieCard.title }}</h3>
@@ -58,7 +60,7 @@
             </header>
             <br>
             <div class="d-flex flex-column justify-content-center">
-              <iframe id="ytplayer" type="text/html" width="1120" height="680" :src="videoUrl" frameborder="0"></iframe>
+              <iframe id="ytplayer" type="text/html" width="720" height="360" :src="videoUrl" frameborder="0"></iframe>
               <h4 class="text-start mt-4">줄거리</h4>
               <hr>
               <div class="fs-6 mb-5 text-start" style="width:1120px;">{{movieCard.overview}}</div>
@@ -75,18 +77,22 @@
               <div class="mx-4">{{ shortment.created_at}}</div>
             </div>
             </div>
-
           </div>
 
-
+          <!-- footer -->
           <div class="modal-footer">
             <div class="d-flex justify-content-start">
-              <textarea 
-              class="form-control"
-              style="width: 600px;" 
-              :v-model="shortmentInput" 
-              @keyup.enter="addShortment"></textarea>
-              <button @click="addShortment" class="btn btn-outline-secondary">+</button>
+              <div v-if="isLogin">
+                <textarea 
+                class="form-control"
+                style="width: 600px;" 
+                v-model="shortmentInput"></textarea>
+                <button @click="addShortment" class="btn btn-outline-secondary">+</button>
+              </div>
+              <div v-else class="d-flex justify-content-start">
+                <textarea disabled style="width: 600px;" class="form-control" placeholder="required login"></textarea>
+                <button class="btn btn-outline-secondary">+</button>
+              </div>
             </div>
           </div>
         </div>
@@ -110,6 +116,7 @@ export default {
       star: 0,
       videoUrl: null,
       shortmentInput: null,
+      isLogin: false,
     }
   },
   methods:{
@@ -118,26 +125,33 @@ export default {
       this.videoUrl = `https://www.youtube.com/embed/${videoPath}`
     },
     getShortMent: function() {
-      const shortment = {
-        content: this.shortmentInput,
-        user: 1
-      }
-      this.$store.dispatch('getShortMent', this.movieCard.id, shortment)
+      this.$store.dispatch('getShortMent', this.movieCard.id)
     },
     addShortment: function() {
-      this.$store.dispatch('addShortment', this.movieCard.id)
+      const data = {
+        content: this.shortmentInput,
+        id: this.movieCard.id
+      }
+      this.$store.dispatch('addShortment', data)
+      this.getShortMent()
+      this.shortmentInput = null
     }
   },
   computed:{
     ...mapState([
-    'shortments'
+    'shortments',
   ]),
   imageUrl: function(){
     const imagePath = this.movieCard['poster_path']
     return `https://image.tmdb.org/t/p/original${imagePath}`
     }
   },
-
+  created: function() {
+    if (localStorage.getItem('jwt')){
+      this.isLogin = true
+      this.$store.dispatch('setToken')
+    }
+  }
 }
 </script>
 
