@@ -15,6 +15,11 @@ export default {
     BoxOffice,
     MovieList,
   },
+  data: function() {
+    return {
+      isLogin: false,
+    }
+  },
   created: function() {
     this.$store.dispatch('loadMovieList')
 
