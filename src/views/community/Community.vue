@@ -58,7 +58,7 @@ export default {
       this.questions()
     } else if (this.$route.query.board === 'chat'){
       this.board()
-    } else {
+    } else if (this.$route.query.board === 'review') {
       this.review()
     }
   }

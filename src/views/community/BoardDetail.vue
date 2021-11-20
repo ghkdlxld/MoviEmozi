@@ -15,6 +15,7 @@
       </v-btn>
       <p class="my-0">등록시각 : {{detail.created_at | dateFormat}}</p>
       <p>수정시각 : {{detail.updated_at | dateFormat}}</p>
+      {{'2021-10-16T14:08:50.298733+09:00' | dateFormat}}
       <div id="user">작성자 : {{detail.user}} </div>
     </div>
     <br>
@@ -55,11 +56,26 @@ export default {
         return ''
       }
       const date = new Date(value)
+      const today = new Date()
+      const takenTime = today - date
+      const takenSecond = takenTime / 1000 
+      const takenMinute = takenSecond / 60
+      const takenHour = takenMinute / 60
+      const takenDay = takenHour / 24
+      const takenWeek = takenDay / 7
+
+      if (takenSecond < 60) return '방금전'
+      if (takenMinute < 60) return `${Math.floor(takenMinute)}분 전` 
+      if (takenHour < 24) return `${Math.floor(takenHour)}시간 전` 
+      if (takenDay < 7) return `${Math.floor(takenDay)}일 전`  
+      if (takenWeek < 5) return `${Math.floor(takenWeek)}주 전`   
+      
       const year = date.getFullYear()
       var month = date.getMonth() + 1
       var day = date.getDate()
       var hour = date.getHours()
       var minute = date.getMinutes()
+      console.log(year, month)
 
       hour = (hour>12) ? 'PM' +' '+(hour-12) : 'AM' +' '+hour
       month = (month<10) ? '0'+month : month
@@ -75,14 +91,15 @@ export default {
       axios({
         method:'get',
         url:`http://127.0.0.1:8000/community/${chatId}/chat_detail/`,
-        
-
+        headers:this.$store.state.config
       })
       .then(res=>{
         this.detail = res.data
       })
       .catch(err=>{
-        console.log(err)
+        if (err.response.status === 401){
+          
+        }
       })
     },
     moveToList:function(){

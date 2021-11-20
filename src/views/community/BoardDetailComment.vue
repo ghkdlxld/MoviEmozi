@@ -56,7 +56,7 @@ export default {
     createComment:function(){
       var data = {content: this.value}
       const boardId = this.board_pk
-      axios.post(`http://127.0.0.1:8000/community/${boardId}/chat_comments/`, data,
+      axios.post(`http://127.0.0.1:8000/community/${boardId}/chat_comments/`, data, {headers: this.$store.state.config},
       {xsrfCookieName: 'csrftoken', xsrfHeaderName: 'X-CSRFToken'})
       .then(res=>{
         console.log(res)

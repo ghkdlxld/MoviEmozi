@@ -2,10 +2,12 @@
   <div>
     <h3 style="color:white"> 리뷰 게시판 </h3>
     <hr>
+    <div v-if="reviewLists">
     <review-list-item
     :reviewList="reviewLists"
     >
     </review-list-item>
+    </div>
   </div>
 </template>
 
