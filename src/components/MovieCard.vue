@@ -14,7 +14,7 @@
           class="card bg-dark m-0 p-2" 
           style="border-box; width: 13rem; height: 310px; opacity: 0.7;"
           data-bs-toggle="modal" :data-bs-target="`#exampleModal-${movieCard.id}`"
-          @click="[getVideo(), getShortMent()]">
+          @click="[getVideo(), getShortMent(), getStarAvg()]">
             <p class="card-title">{{movieCard.title}}</p>
             <p class="card-text">{{movieCard.popularity}} | {{movieCard.runtime}} 분</p>
             <p class="card-text">{{movieCard.genres}}</p>
@@ -38,8 +38,10 @@
           <div class="modal-body container">
             <div class="d-flex justify-content-between">
               <h3 class="text-start">{{ movieCard.title }}</h3>
-              <div class="mx-4">
-                <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+              <div class="mx-4 d-flex">
+                <div class="fs-2 mx-1">{{ averageRank }}</div><div style="color: grey;" class="mt-4"> / 5</div>
+                <v-icon x-large style="color: goldenrod;">mdi-star</v-icon><div class="fw-light mx-2 mb-1" style="font-size: 35px;">|</div>
+
               </div>
             </div>
             <header class="text-start d-flex justify-content-between">
@@ -57,52 +59,98 @@
             </div>
             <h4 class="text-start mt-4">한줄평</h4>
             <hr>
-            <div v-if="shortments">
-              <div 
-              v-for="shortment in shortments"
-              :key="shortment.id"
-              class="d-flex flex-column container border border-secondary border-1 rounded-3 mb-3"
-              style="width:900px;">
-                <div class="d-flex justify-content-between">
-                  <div class="fs-5 text-start">{{ shortment.content }}</div>
-                  <div class="mx-3">
-                    <button  @click="updateShortment(shortment.id, shortment.user)" class="mx-2"><svg xmlns="http://www.w3.org/2000/svg" 
-                    width="13" height="13" fill="currentColor" 
-                    class="bi bi-pencil-fill" viewBox="0 0 16 16">
-                    <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z"/>
-                    </svg></button>
-                    
 
-                    <button @click="deleteShortment(shortment.id, shortment.user)">
-                      <svg xmlns="http://www.w3.org/2000/svg" 
-                      width="13" height="13" fill="currentColor" 
-                      class="bi bi-trash-fill" viewBox="0 0 16 16">
-                      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
-                      </svg></button>
+            <div 
+            v-for="shortment in shortments"
+            :key="shortment.id"
+            class="d-flex flex-column container border border-secondary border-1 rounded-3 mb-3"
+            style="width:900px;">
+
+              
+              <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                  <div class="mx-1">{{ userNameList[shortment.user] || shortment.user}}</div>
+                  <!-- user가 준 별점 갯수 -->
+                  <div class="mx-2">
+                    <span v-for="(Info, i) in movieRankInfo" :key="i">
+                      <span v-if="Object.keys(Info)[0] === userNameList[shortment.user]">
+                        <span v-for="(n,i) in Info[userNameList[shortment.user]]" :key="i+'l'">
+                          <v-icon small style="color: goldenrod;">mdi-star</v-icon>
+                        </span>
+                        <span v-for="(n, i) in (5-Info[userNameList[shortment.user]])" :key="i+'r'">
+                          <v-icon small style="color: goldenrod;">mdi-star-outline</v-icon>
+                        </span>
+                      </span>
+                    </span>
                   </div>
                 </div>
 
-                <div class="d-flex">
-                  <div>{{ userNameList[shortment.user] || shortment.user}}</div>
-                  <div class="mx-4">{{ shortment.created_at}}</div>
+                
+                <div class="mx-3">
+                  <button  @click="modifyShortment(shortment.id, shortment.user)" class="mx-2">
+                    <v-icon small style="color: silver;">mdi-pencil</v-icon>
+                  </button>
+                  <button @click="[deleteShortment(shortment.id, shortment.user), deleteStar(shortment.user)]">
+                    <v-icon small style="color: silver;">mdi-trash-can</v-icon>
+                  </button>
+                </div>
+              </div>
+
+              <!-- 한줄평 수정 -->
+              <div v-if="shortment.id === isUpdate[0] && isUpdate[1]===true"
+              class="d-flex justify-content-between">
+                <textarea type="text" 
+                :value="shortment.content"
+                id="editvalue"
+                class="fs-5 text-start border border-1 rounded"
+                style="color: silver; width:600px;"></textarea>
+                <div class="d-flex flex-column">
+                  <div class="mx-4 text-end">작성 {{ shortment.created_at}}</div>
+                  <div class="mx-4 text-end">수정 {{ shortment.updated_at}}</div>
+                </div>
+              </div>
+
+              <div v-else class="d-flex justify-content-between item-align-center">
+                <div class="fs-5 text-start">{{ shortment.content }}</div>
+                <div class="d-flex flex-column">
+                  <div class="mx-4 text-end">작성 {{ shortment.created_at}}</div>
+                  <div class="mx-4 text-end">수정 {{ shortment.updated_at}}</div>
                 </div>
               </div>
             </div>
-            <div v-else>
-              아직 등록된 한줄평이 없습니다
-            </div>
           </div>
+
 
           <!-- footer -->
           <div class="modal-footer">
-            <div class="d-flex justify-content-start">
-              <div v-if="isLogin" class="d-flex">
-                <textarea 
-                class="form-control"
-                style="width: 600px; height: 60px;" 
-                v-model="shortmentInput"></textarea>
-                <button @click="addShortment" class="btn btn-outline-secondary mx-3 mt-1" style="height: 50px;">+</button>
+            <div class="d-flex">
+
+              <div v-if="isLogin" class="d-flex flex-column align-items-start">
+                <!-- 별점 주기 -->
+                <div>
+                  <span v-for="(star, i) in stars" :key="i">
+                    <button @click="toggleStar(i)">
+                      <div v-if="stars[i]">
+                        <v-icon style="color: goldenrod; width: 20px;" class="mx-1">mdi-star</v-icon></div>
+                      <div v-else>
+                        <v-icon small style="color: goldenrod;" class="mx-1">mdi-star-outline</v-icon></div>
+                    </button>
+                  </span>
+                </div>
+
+                <!-- 한줄평 입력 -->
+                <div class="d-flex mt-2">
+                  <textarea 
+                  class="form-control"
+                  style="width: 600px; height: 60px;" 
+                  v-model="shortmentInput"></textarea>
+
+
+                  <button @click="[addShortment(), addRank()]" 
+                  class="btn btn-outline-secondary mx-3 mt-1" style="height: 50px;">+</button>
+                </div>
               </div>
+
               <div v-else class="d-flex justify-content-start">
                 <textarea disabled style="width: 600px;" class="form-control" placeholder="required login"></textarea>
                 <button class="btn btn-outline-secondary">+</button>
@@ -131,10 +179,13 @@ export default {
   data: function () {
     return {
       Detail: false,
-      star: 0,
+      stars: [false, false, false, false, false],
       videoUrl: null,
       shortmentInput: null,
       isLogin: false,
+      isUpdate: [0, false],
+      movieRankInfo: [],
+      averageRank: 0,
     }
   },
   methods:{
@@ -145,18 +196,44 @@ export default {
     getShortMent: function() {
       this.$store.dispatch('getShortMent', this.movieCard.id)
     },
-    addShortment: function() {
-      const data = {
-        content: this.shortmentInput,
-        id: this.movieCard.id,
+
+
+    alreadyGiveRank: function() {
+      let giveStar = false
+      for (let Info of this.movieRankInfo){
+        for(let i in Info){
+          if(this.LoginUser === i){
+            giveStar = true
+            return giveStar
+          }
+        }
       }
-      this.$store.dispatch('addShortment', data)
-      this.getShortMent()
-      this.shortmentInput = null
+      return giveStar
+    },
+
+
+    addShortment: function() {
+      const giveStar = this.alreadyGiveRank()
+      console.log(giveStar)
+
+      if (!giveStar) {
+        const data = {
+          content: this.shortmentInput,
+          id: this.movieCard.id,
+        }
+        this.$store.dispatch('addShortment', data)
+        this.getShortMent()
+        this.getStarAvg()
+        this.shortmentInput = null
+      } else{
+        alert(`${this.LoginUser}님은 이미 감상평을 등록하셨습니다`)
+        this.shortmentInput = ''
+        this.stars = [false, false, false, false, false]
+      }
     },
 
     deleteShortment: function(shortmentId, author) {
-      if (this.LoginUser === (this.userNameList[author])){
+      if (this.LoginUser === (this.userNameList[author]) || this.LoginUser === author){
         axios({
           method: 'delete',
           url: `http://127.0.0.1:8000/movies/shortments/${shortmentId}/`,
@@ -168,28 +245,150 @@ export default {
         } else {
         alert('삭제 권한이 없습니다!')
       }
+    },
+
+    modifyShortment: function(shortmentId, author){
+      if (this.LoginUser === (this.userNameList[author]) || this.LoginUser === author) {
+        if (this.isUpdate[1] === false) {
+          this.wantUpdate(shortmentId)
+        } else {
+          this.updateShortment(shortmentId)
+          this.wantUpdate(shortmentId)
+        }
+      } else {
+        alert('수정 권한이 없습니다!')
+      }
+    },
+
+
+    wantUpdate: function(shortmentId){
+      this.isUpdate = [shortmentId, !this.isUpdate[1]]
+    },
+
+    updateShortment: function(shortmentId) {
+      const editValue = document.getElementById('editvalue').value
+      axios({
+        method: 'put',
+        url: `http://127.0.0.1:8000/movies/shortments/${shortmentId}/`,
+        data: {content: editValue},
+        headers: this.$store.state.config
+      })
+      .then(res=> {
+        this.$store.dispatch('betweenDate', res.data.updated_at)
+        res.data.updated_at = this.$store.state.betweenDate
+        this.getShortMent()
+      })
+    },
+      
+
+    toggleStar: function(index) {
+      let starsState = Array(5).fill(false)
+      if (index > 0) {
+        for (let i=0; i <= index; i++) {
+          starsState[i] = true
+        }
+      } 
+      else if (this.stars[0] == true && this.stars[1] == false) {
+        starsState.fill(false)
+      } 
+      else {
+        for (let i=0; i <= index; i++) {
+          starsState[i] = true
+        }
+      }
+      this.stars = starsState
+    },
+
+    getStarAvg: function() {
+      axios({
+        method: 'get',
+        url: `http://127.0.0.1:8000/movies/${this.movieCard.id}/rank/`,
+        headers: this.$store.state.config
+      })
+      .then(res=>{
+        const ans = []
+        for (let Info of res.data) {
+          const InfoObj = {}
+          InfoObj[Info['user']] = Info['rank']
+          ans.push(InfoObj)
+        }
+        this.movieRankInfo = ans
+        console.log(this.movieRankInfo)
+
+
+        let total = 0
+        let personNum = this.movieRankInfo.length
+        for (let Info of this.movieRankInfo){
+          for(let i in Info){
+            total += Info[i]
+          }
+        }
+        this.averageRank = (total/personNum).toFixed(1)
+        if (isNaN(this.averageRank)) {
+          this.averageRank = 0
+        }
+        this.getShortMent()
+      })
+    },
+
+
+
+
+
+    addRank: function() {
+      let countStar = 0
+      for (let i=0; i<5; i++){
+        if (this.stars[i] === true) {
+          countStar ++
+        }
+      }
+      const giveStar = this.alreadyGiveRank()
+      if (!giveStar) {
+        axios({
+          method: 'post',
+          url: `http://127.0.0.1:8000/movies/${this.movieCard.id}/rank/`,
+          data: { rank: countStar },
+          headers: this.$store.state.config
+        })
+        .then(() => {
+          this.stars = Array(5).fill(false)
+          this.getShortMent()
+        })
+      } else {
+        alert('평점을 바꾸길 원하신다면 상단의 "평점 수정하기"를 눌러주세요')
+      }
+    },
+
+    deleteStar: function (author) {
+      const rank
+      axios({
+        method: 'delete',
+        url: `http://127.0.0.1:8000/movies/${}/rank_update/?rank=1`
+        // rank_pk말고 userpk가 편할듯
+      })
     }
   },
+
   computed:{
     ...mapState([
     'shortments',
     'config',
     'userNameList',
-  ]),
-  ...mapState(userStore,['LoginUser']),
-  
-  imageUrl: function(){
-    const imagePath = this.movieCard['poster_path']
-    return `https://image.tmdb.org/t/p/original${imagePath}`
-    }
+    ]),
+    ...mapState(userStore,['LoginUser']),
+    
+    imageUrl: function(){
+      const imagePath = this.movieCard['poster_path']
+      return `https://image.tmdb.org/t/p/original${imagePath}`
+    },
   },
+
   created: function() {
     if (localStorage.getItem('jwt')){
       this.isLogin = true
       this.$store.dispatch('setToken')
       this.$store.dispatch('Login')
     }
-    this.$store.dispatch('CreateUserList')
   }
 }
 </script>
