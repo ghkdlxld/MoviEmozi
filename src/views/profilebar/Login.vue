@@ -43,7 +43,12 @@ export default {
         this.$store.dispatch('setToken')
         this.$store.dispatch('userStore/getLoginUser', this.user.username)
         this.$store.dispatch('Login')
+        if (document.referrer){
+          history.back();
+        }
+        else{
         this.$router.push({name:'Home'})
+        }
       })
       .catch(err=>{
         console.log(err)

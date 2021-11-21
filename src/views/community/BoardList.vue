@@ -1,12 +1,13 @@
 <template>
   <div>
     <h3 style="color:white">자유 게시판</h3>
+
+    <hr>
     <v-row>
       <v-col cols="auto">
       <v-btn tile outlined dark @click="chatsCreate">Create</v-btn>
       </v-col>
     </v-row>
-    <hr>
     <board-list-item
     :boardList="filtering"
     >
@@ -25,9 +26,8 @@ export default {
   },
   methods:{
     chatsCreate:function(){
-
+      this.$router.push({name:"BoardCreate", query:{category:'chat'}})
     },
-    
   },
 
   computed:{

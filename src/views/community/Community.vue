@@ -10,6 +10,7 @@
       건의 게시판
     </v-btn>
     <div class="my-4 container">
+    
       <board-list v-if="isBoard"></board-list>
       <question-list v-if="isQuestions"></question-list>
       <review-list v-if="isReview"></review-list>
@@ -54,6 +55,7 @@ export default {
     this.$store.dispatch('CreateChatBoard')
     this.$store.dispatch('CreateReviewBoard')
     this.$store.dispatch('CreateUserList')
+    this.$store.dispatch('loadMovieList')
     if (this.$route.query.board === 'question'){
       this.questions()
     } else if (this.$route.query.board === 'chat'){

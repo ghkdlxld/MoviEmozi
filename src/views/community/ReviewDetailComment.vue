@@ -1,7 +1,7 @@
 <template>
   <div>
     <div align="left">
-    <h3>Comment</h3>
+    <h3>Comment ({{comment_cnt}})</h3>
       <div v-if="loginRequest" style="color:red">로그인하시면 댓글 작성이 가능합니다!! </div>
     <span style="margin: 4px 30px 0 10px;">
       <input type="text" style="width:85%; height:60px" @keyup.enter="createComment"
@@ -49,10 +49,6 @@
     <br>
     <hr>
     </div>
-    <v-pagination v-if="comment_list" dark style="active.color:white;"
-    v-model="curPageNum"    
-    :length="numOfPages"
-    ></v-pagination>
 
     </div>
   </div>
@@ -68,7 +64,6 @@ export default {
   name:"BoardDetailComment",
   props:{
     board_pk:Number,
-    board_num:String,
   },
   data:function(){
     return{
@@ -81,8 +76,7 @@ export default {
       isUpdated: null,
       exist : null,
       category:null,
-      dataPerPage:5,
-      curPageNum:1,
+      comment_cnt : 0,
     }
   },
   computed:{
@@ -92,35 +86,14 @@ export default {
     ...mapState(
       userStore,
       ['LoginUser',]
-    ),
-    startOffset(){
-      return ((this.curPageNum-1) * this.dataPerPage)
-    },
-    endOffset(){
-      return (this.startOffset + this.dataPerPage)
-    },
-    numOfPages(){
-      if (this.comment_list){
-      return Math.ceil(this.comment_list.length / this.dataPerPage)
-      } else{
-        return '0'
-      }
-    },
-    DataList(){
-      return this.comment_list.slice(this.startOffset, this.endOffset)
-    }
+    )
   },
   methods:{
     updateValue:function(Id,index){
       const update = document.getElementById('editvalue').value
-      if (this.board_num){
-      this.category = 'chat'
-      } else{
-      this.category = 'review'
-      }
       axios({
         method:'put',
-        url:`http://127.0.0.1:8000/community/${this.category}_comments/${Id}/`,
+        url:`http://127.0.0.1:8000/community/review_comments/${Id}/`,
         data: {content:update},
         headers: this.$store.state.config
       })
@@ -140,14 +113,9 @@ export default {
     createComment:function(){
       var data = {content: this.value}
       const boardId = this.board_pk
-      if (this.board_num){
-      this.category = 'chat'
-      } else{
-      this.category = 'review'
-      }
       axios({
         method:'post',
-        url:`http://127.0.0.1:8000/community/${boardId}/${this.category}_comments/`,
+        url:`http://127.0.0.1:8000/community/${boardId}/review_comments/`,
         data, 
         headers: this.$store.state.config
       })
@@ -170,19 +138,15 @@ export default {
     },
     ImportComment : function(){
     const boardId = this.board_pk
-      if (this.board_num){
-      this.category = 'chat'
-      } else{
-      this.category = 'review'
-      }
     axios({
       method:'get',
-      url:`http://127.0.0.1:8000/community/${boardId}/${this.category}_comments/`,
+      url:`http://127.0.0.1:8000/community/${boardId}/review_comments/`,
       headers: this.$store.state.config
     })
     .then(res=>{
       this.exist = true
       this.comment_list = res.data 
+      this.comment_cnt = res.data.length
       this.isUpdated = Array(this.comment_list.length).fill(false)
       this.updated_list = []
       this.created_list = []
@@ -202,14 +166,9 @@ export default {
     },
 
     DeleteComment:function(Id){
-      if (this.board_num){
-      this.category = 'chat'
-      } else{
-      this.category = 'review'
-      }
       axios({
         method:'delete',
-        url:`http://127.0.0.1:8000/community/${this.category}_comments/${Id}/`,
+        url:`http://127.0.0.1:8000/community/review_comments/${Id}/`,
         headers: this.$store.state.config
       })
       .then(()=>{
@@ -255,6 +214,5 @@ input{
   color:black;
   background-color: cadetblue;
 }
-
 
 </style>

@@ -8,25 +8,25 @@
         </v-btn>
     </div>
     <hr>
-
     <div v-if="!isUpdated">
-    <div align='left'>
-    <span style="font-size:30px">Title: {{detail.title}} </span>
-      <v-btn id="edit" @click="isUpdated=true">
+    <span style="font-size:20px; text-align:left;">Title: {{detail.title}} </span>
+      <v-btn id="edit" @click="isUpdated=true" v-show="detail.user === LoginUser">
         <v-icon left>mdi-pencil</v-icon><b> Edit</b>
       </v-btn>
-      <p class="my-0">등록시각 : {{created}}</p>
-      <p>수정시각 : {{updated}}</p>
-      <div id="user">작성자 : {{detail.user}} </div>
+    <hr>
+    <div align='left'>
+      <span id="user">작성자 : {{detail.user}} </span>
+      <span id="time" class="my-0">등록시각 : {{created}}</span><br>
+      <span id="time">수정시각 : {{updated}}</span>
     </div>
     <br>
       <div class="my-3" align='left'>
-        <div id="content">내용 :  </div>
-        {{detail.content}}
+        <div id="content" style="white-space:pre;">내용 :  <br>
+        {{detail.content}}</div>
       </div>
       <br>
       <div align="right"> 
-      <v-btn id="delete" class="my-2 ma-2" @click="Delete">
+      <v-btn id="delete" class="my-2 ma-2" @click="Delete" v-show="detail.user === LoginUser">
         <v-icon left> mdi-delete</v-icon> <b>Delete</b>
       </v-btn>
       </div>
@@ -34,7 +34,7 @@
 
       <div v-else align="left">
         <form>
-        <div style="font-size:30px">
+        <div style="font-size:20px">
         Title: <input type="text" id="updated_title" v-model="detail.title">
         <v-btn @click="editcancel" id="update_cancel" small>
           <v-icon left> mdi-format-color-marker-cancel </v-icon> <b>Cancel</b></v-btn>
@@ -63,7 +63,7 @@
 
       <hr>
       <div>
-      <board-detail-comment :board_pk="detail.id"></board-detail-comment>
+      <board-detail-comment :board_pk="detail.id" :board_num="detail.board_num"></board-detail-comment>
       </div>
       
   </div>
@@ -72,6 +72,10 @@
 <script>
 import BoardDetailComment from './BoardDetailComment.vue'
 import axios from 'axios'
+import {mapState} from 'vuex'
+
+const userStore = 'userStore'
+
 export default {
   name:"BoardDetail",
   components:{
@@ -92,20 +96,31 @@ export default {
       isNull_content : false,
     }
   },
+  computed:{
+    ...mapState(
+      userStore,
+      ['LoginUser',]
+    )
+  },
   methods:{
-    Delete:function(chatId){
-      chatId = this.chatId
+    Delete:function(){
+      const chatId = this.chatId
+      const num = this.detail.board_num
       axios({
         method:'delete',
         url:`http://127.0.0.1:8000/community/${chatId}/chat_detail/`,
         headers:this.$store.state.config
       })
       .then(()=>{
-        this.CreateChatDetail()
+        if (num === "2" ){
+        this.$router.push({name:"Community", query:{board:'question'}})
+        } else{
+        this.$router.push({name:"Community", query:{board:'chat'}})
+      }
       })
     },
-    update:function(chatId){
-      chatId = this.chatId
+    update:function(){
+      const chatId = this.chatId
       const edit_title = this.detail.title
       const edit_content = this.detail.content
       if (edit_content.trim() && edit_title.trim()){
@@ -134,13 +149,15 @@ export default {
       this.isUpdated = false
       this.detail.title = this.title
       this.detail.content = this.content
+      this.isNull_title = false
+      this.isNull_content = false
     },
     clear:function(){
       this.detail.content = '';
       this.detail.title = '';
     },
-    CreateChatDetail:function(chatId){
-      chatId = this.$route.params.chatId
+    CreateChatDetail:function(){
+      const chatId = this.$route.params.chatId
       this.chatId = chatId
       axios({
         method:'get',
@@ -184,7 +201,7 @@ export default {
 </script>
 
 <style>
-p {
+#time {
   font-size: 13px;
   text-align: right;
 }
