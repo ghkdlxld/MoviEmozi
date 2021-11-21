@@ -10,16 +10,13 @@
                   No.
                 </th>
                 <th class="text-center">
-                  Category
+                  Movie
                 </th>
                 <th class="text-center">
                   Title
                 </th>
                 <th class="text-center">
                   User
-                </th>
-                <th class="text-center">
-                  Movie
                 </th>
                 <th class="text-center">
                   Updated_at
@@ -33,10 +30,9 @@
                 @click="moveToDetail(review.id)"
               >
                 <td>{{ review.id }}</td>
-                <td> 리뷰 </td>
-                <td>{{ review.title }}</td>
+                <td>{{movieTitle['movieTitle'][review.movie_id-1]}}</td>
+                <td>{{ review.title }} &nbsp; ({{likeCnt(review.id)}})</td>
                 <td>{{userNameList[review.user]}}</td>
-                <td>{{review.movie_id}}</td>
                 <td>{{review.updated_at |dateFormat}}</td>
               </tr>
             </tbody>
@@ -55,6 +51,9 @@
 
 <script>
 import {mapState} from 'vuex'
+import axios from 'axios'
+
+const movieTitle = 'movieTitle'
 
 export default {
   name:"ReviewListItem",
@@ -70,11 +69,28 @@ export default {
   methods:{
     moveToDetail:function(reviewId){
       this.$router.push({name:'ReviewDetail', params: {reviewId:reviewId}})
-    }
+    },
+    likeCnt : function(id){
+      var cnt = 0
+      axios({
+        method:'get',
+        url:`http://127.0.0.1:8000/community/${id}/review_comments/`,
+        headers: this.$store.state.config
+      })
+      .then(res=>{
+        cnt = res.data.length
+      })
+      return cnt
+    },
+    
   },
   computed:{
     ...mapState([
       'userNameList',
+    ]),
+    ...mapState([
+      movieTitle,
+      ['movieTitle,']
     ]),
     startOffset(){
       return ((this.curPageNum-1) * this.dataPerPage)
@@ -87,7 +103,7 @@ export default {
     },
     DataList(){
       return this.reviewList.slice(this.startOffset, this.endOffset)
-    }
+    },
   },
   filters:{
     dateFormat:function(value){
