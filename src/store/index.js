@@ -147,6 +147,8 @@ const store = new Vuex.Store({
           res.data.forEach(shortment=>{
             dispatch('betweenDate', shortment.created_at)
             shortment.created_at = state.betweenDate
+            dispatch('betweenDate', shortment.updated_at)
+            shortment.updated_at = state.betweenDate
           })
           commit('GET_SHORT_MENT', res.data)
         }
@@ -168,12 +170,15 @@ const store = new Vuex.Store({
       .then(res => {
         context.dispatch('betweenDate', res.data.created_at)
         res.data.created_at = context.state.betweenDate
+        context.dispatch('betweenDate', res.data.updated_at)
+        res.data.updated_at = context.state.betweenDate
         context.commit('ADD_SHORTMENT', res.data)
       })
       .catch(err => {
         console.log(err)
       })
     },
+
 
     // 게시글 작성시각을 yyyy-mm-dd AM yy:mm 형식으로 변환하여 출력
     dateFormat:function({commit},value){

@@ -27,6 +27,8 @@ export default {
       this.isLogin = true
       this.$store.dispatch('setToken')
     }
+
+    this.$store.dispatch('CreateUserList')
   }
 }
 </script>
