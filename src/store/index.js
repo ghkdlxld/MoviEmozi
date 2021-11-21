@@ -4,7 +4,7 @@ import Vuex from 'vuex'
 import Vuetify from 'vuetify'
 import colors from 'vuetify/es5/util/colors'
 import createPersistedState from 'vuex-persistedstate'
-import userStore from './userStore';
+import userStore from '@/store/userStore'
 
 
 Vue.use(Vuex)
@@ -45,7 +45,6 @@ const store = new Vuex.Store({
     LOGOUT:function(state){
       state.config = null
       state.isLogin = false
-      console.log(state.config)
 
     },
     LOGIN:function(state){
@@ -55,7 +54,6 @@ const store = new Vuex.Store({
 
     LOAD_MOVIE_LIST: function(state, movielist){
       state.movieList = movielist
-      console.log(movielist)
     },
     GET_SHORT_MENT: function(state, shortments){
       state.shortments = shortments
@@ -111,7 +109,7 @@ const store = new Vuex.Store({
       })
     },
     Logout:function({commit}){
-      localStorage.removeItem()
+      localStorage.removeItem('jwt')
       commit('LOGOUT')
     },
     Login:function({commit}){
@@ -137,16 +135,24 @@ const store = new Vuex.Store({
         commit('LOAD_MOVIE_LIST', res.data)
       })
     },
-    getShortMent: function({commit}, movie_pk) {
+    getShortMent: function({commit, dispatch, state}, movie_pk) {
       axios({
         method: 'get',
         url: `http://127.0.0.1:8000/movies/${movie_pk}/shortment_list/`,
       })
       .then(res =>{
-        commit('GET_SHORT_MENT', res.data)
+        if(res.status === 204) {
+          commit('GET_SHORT_MENT', [])
+        } else {
+          res.data.forEach(shortment=>{
+            dispatch('betweenDate', shortment.created_at)
+            shortment.created_at = state.betweenDate
+          })
+          commit('GET_SHORT_MENT', res.data)
+        }
       })
-      .catch(() => {
-        console.log('아직 한줄평이 없습니다.')
+      .catch(err => {
+        console.log(err)
       })
     },
     addShortment: function(context, data) {
@@ -154,10 +160,14 @@ const store = new Vuex.Store({
       axios({
         method: 'post',
         url: `http://127.0.0.1:8000/movies/${movieId}/shortment/`,
-        data: {content : data.content},
+        data: {
+          content : data.content,
+        },
         headers: context.state.config, 
       })
       .then(res => {
+        context.dispatch('betweenDate', res.data.created_at)
+        res.data.created_at = context.state.betweenDate
         context.commit('ADD_SHORTMENT', res.data)
       })
       .catch(err => {
@@ -215,4 +225,4 @@ const store = new Vuex.Store({
   ]
 })
 
-export default store;
+export default store

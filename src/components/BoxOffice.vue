@@ -7,15 +7,14 @@
       :controls-prev-html="'&#10092;'" 
       :controls-next-html="'&#10093;'" 
       :height="485" :width="340"
-      :clickable="false"
-      v-if="topTenMovie">
+      :clickable="false">
         <slide 
         v-for="(slide, i) in slides" 
         :index="i"
         :key="i"
         class="border border-dark"
         >
-          <figure>
+          <figure v-if="topTenPosterPath[i]">
             <img :src="`https://image.tmdb.org/t/p/original/${topTenPosterPath[i]}`">
           </figure>
         </slide>
@@ -66,16 +65,18 @@ export default {
       }
     // console.log(this.topTenMovie)
 
-    for (const movie of this.topTenMovie) {
-      axios({
-        method: 'get',
-        url: `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API}&language=ko-KR&page=1&include_adult=false&query=${movie}`
-      })
-      .then(res => {
-        this.topTenPosterPath.push(res.data.results[0].poster_path)
-      })
-    }
-  })
+      for (const movie of this.topTenMovie) {
+        // console.log(movie)
+        axios({
+          method: 'get',
+          url: `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API}&language=ko-KR&page=1&include_adult=false&query=${movie}`
+        })
+        .then(res => {
+          this.topTenPosterPath.push(res.data.results[0].poster_path)
+        })
+      }
+      // console.log(this.topTenPosterPath)
+    })
   }
 }
 </script>
