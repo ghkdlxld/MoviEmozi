@@ -32,7 +32,8 @@
               > 
                 <td>{{ board.id }}</td>
                 <td>{{ boardNum[board.board_num] }}</td>
-                <td>{{ board.title }}</td>
+                
+                <td>{{ board.title }} &nbsp; </td>
                 <td>{{ userNameList[board.user]}}</td>
                 <td>{{board.updated_at | dateFormat}}</td>
               </tr>
@@ -48,9 +49,12 @@
     </div>
   </div>
 </template>
-
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 <script>
 import { mapState } from 'vuex'
+import _ from 'lodash'
+
+const userStore = 'userStore'
 
 export default {
   name:"BoardListItem",
@@ -65,15 +69,24 @@ export default {
   },
   methods:{
     moveToDetail:function(chatId){
+      if (this.LoginUser){
       this.$router.push({name:'BoardDetail', params: {chatId:chatId}})
+      }
+      else{
+        this.$router.push({name:'Login'})
+      }
     },
     
   },
   computed:{
-    ...mapState([
-      'boardNum',
+    ...mapState(
+      ['boardNum',
       'userNameList'
     ]),
+    ...mapState(
+      userStore,
+      ['LoginUser',]
+    ),
     startOffset(){
       return ((this.curPageNum-1) * this.dataPerPage)
     },

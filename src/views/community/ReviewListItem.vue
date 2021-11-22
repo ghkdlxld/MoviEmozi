@@ -10,7 +10,7 @@
                   No.
                 </th>
                 <th class="text-center">
-                  Category
+                  Movie
                 </th>
                 <th class="text-center">
                   Title
@@ -19,24 +19,21 @@
                   User
                 </th>
                 <th class="text-center">
-                  Movie
-                </th>
-                <th class="text-center">
                   Updated_at
                 </th>
               </tr>
             </thead>
             <tbody>
               <tr
-                v-for="review in DataList"
+                v-for="(review) in DataList"
                 :key="review.id"
                 @click="moveToDetail(review.id)"
               >
                 <td>{{ review.id }}</td>
-                <td> 리뷰 </td>
-                <td>{{ review.title }}</td>
+                <td>{{movieTitle['movieTitle'][(review.movie_id-1)]}}</td>
+                <!-- {{ImportComment(review.id)}} -->
+                <td>{{ review.title }} &nbsp; </td>
                 <td>{{userNameList[review.user]}}</td>
-                <td>{{review.movie_id}}</td>
                 <td>{{review.updated_at |dateFormat}}</td>
               </tr>
             </tbody>
@@ -56,6 +53,8 @@
 <script>
 import {mapState} from 'vuex'
 
+const movieTitle = 'movieTitle'
+
 export default {
   name:"ReviewListItem",
   props:{
@@ -70,11 +69,23 @@ export default {
   methods:{
     moveToDetail:function(reviewId){
       this.$router.push({name:'ReviewDetail', params: {reviewId:reviewId}})
-    }
+    },
+    
   },
   computed:{
+    comment_cnt(){
+      var cnt = 0
+      if (this.comment_list){
+        cnt = this.comment_list.length
+      }
+      return cnt
+    },
     ...mapState([
       'userNameList',
+    ]),
+    ...mapState([
+      movieTitle,
+      ['movieTitle,']
     ]),
     startOffset(){
       return ((this.curPageNum-1) * this.dataPerPage)
@@ -87,7 +98,7 @@ export default {
     },
     DataList(){
       return this.reviewList.slice(this.startOffset, this.endOffset)
-    }
+    },
   },
   filters:{
     dateFormat:function(value){
@@ -109,6 +120,23 @@ export default {
       return year + '-' + month+'-'+day+' '+hour+':'+minute;
     }
   },
+  // created:function(){
+  //   for (let i=1; i<this.reviewList.length+1; i++){
+  //     axios({
+  //       method:'get',
+  //       url:`http://127.0.0.1:8000/community/${i}/review_comments/`,
+  //       headers: this.$store.state.config
+  //     })
+  //     .then(res=>{
+  //       this.cnt_list.push(res.data.length)
+  //     })
+  //     .catch((err)=>{
+  //       if(err.response.status===404){
+  //         this.cnt_list.push(0)
+  //       }
+  //     })
+  //   }
+  // }
 }
 </script>
 

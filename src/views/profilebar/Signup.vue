@@ -1,24 +1,56 @@
 <template>
   <div style="color:white;">
     <h1>Signup</h1>
-    <div>
-      <label for="username">UserName:  </label>
-      <input type="text" id="username" v-model="user.username">
-    </div>
-    <br>
-    <div>
-      <label for="password">password:   </label>
-      <input type="text" id="password" v-model="user.password">
-    </div>
-    <br>
-    <div> 
-      <label for="passwordConfirm"> passwordConfirm:   </label>
-      <input type="text" id="passwordConfirm" v-model="user.passwordConfirm"
-      @keyup.enter="signup"
+    <v-container id="signup">
+      <v-row>
+      <v-form ref="form" lazy-validation v-model="valid">
+      <v-col align="center">
+      <v-text-field
+      style="width:250px;"
+      light
+      v-model="user.username"
+      :counter="10"
+      :rules="nameRules"
+      label="userName"
+      required
       >
-    </div>
-    <br>
-    <button @click="signup">Sign Up</button>
+      </v-text-field>
+      </v-col>
+      <v-col align="center">
+      <v-text-field
+      style="width:300px;"
+      v-model="user.password"
+      :rules="passwordRules"
+      label="password"
+      required
+      >
+      </v-text-field>
+      </v-col>
+      <v-col align="center">
+      <v-text-field
+      style="width:310px; margin-bottom:15px;"
+      v-model="user.passwordConfirm"
+      :rules="passwordConfirmRules"
+      label="passwordConfirm"
+      required
+      >
+      </v-text-field>
+      </v-col>
+      <v-col>
+      <input type="file" @change="onInputImage()" ref="Image" class="image">
+      </v-col>
+      <v-btn :class="{isvalid : !valid}" class="mx-4" @click="validate" style="margin-bottom: 20px;">
+        Sign Up
+      </v-btn>
+      <v-btn class="mx-4 reset px-3" @click="reset">
+        Reset
+      </v-btn>
+      <v-btn @click="resetValidate" class="reset_valid mx-4 px-3">Reset Error</v-btn>
+
+    </v-form>
+        
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -34,10 +66,39 @@ export default {
         username:null,
         password : null,
         passwordConfirm : null,
-      }
+        image : '',
+      },
+      valid : true,
+      nameRules:[
+        v=> !!v || '이름은 필수 입력사항입니다.',
+        v => (v && v.length <= 10) || '이름은 10글자를 넘을 수 없습니다.',],
+      passwordRules:[
+        v=>!!v || '비밀번호는 필수 입력사항입니다.',
+        v=>(v && v.length >= 5 ) || '비밀번호는 5글자 이상 가능합니다.',],
+      passwordConfirmRules:[
+        v=>!!v || '비밀번호 확인은 필수 입력사항입니다.',
+        v=>(!!v && v) === this.user.password || '비밀번호가 일치하지 않습니다.',],
+      
     }
   },
   methods:{
+    onInputImage(){
+      var image = this.$refs['Image'].files[0]
+      const url = URL.createObjectURL(image)
+      this.user.image = url
+    },
+    validate () {
+      if(this.$refs.form.validate()){
+        this.signup()
+      }
+    },
+    reset () {
+      this.$refs.form.reset()
+    },
+    resetValidate () {
+      this.$refs.form.resetValidation()
+    },
+
     signup : function(){
       axios({
         method:'post',
@@ -48,13 +109,62 @@ export default {
         this.$router.push({name:'Login'})
       })
       .catch(err=>{
-        console.log(err)
+        if (err.response.status === 409){
+        alert(err.response.data.error)
+        this.reset()
+        }
       })
     }
+  },
+  created:function(){
+
   }
 }
 </script>
 
 <style>
+.image{
+  margin-bottom: 10px;
+  color:rgb(18, 92, 34);
+}
 
+.v-label{
+  color:white !important;
+  padding-left: 10px;
+}
+.v-messages__message{
+  color:rgb(173, 7, 7);
+  font-size:15px;
+  padding-top: 10px;
+}
+
+.reset{
+  margin-bottom: 20px;
+
+}
+.reset_valid{
+  margin-bottom: 20px;
+}
+
+.isvalid  {
+  background-color: yellowgreen;
+}
+.theme--light.v-input input, .theme--light.v-input textarea{
+  color:white;
+}
+
+#signup{
+  border: 2px solid rgb(152, 182, 95);
+}
+
+#input-14{
+  padding-left: 10px;
+}
+#input-17 {
+  padding-left: 10px;
+}
+
+#input-20{
+  padding-left: 10px;
+}
 </style>

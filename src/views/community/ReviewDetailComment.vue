@@ -14,8 +14,8 @@
     <br>
     <hr>
     <p v-if="!exist" style="text-align:left; font-size:15px;">댓글이 아직 없습니다.</p>
-    <div v-else
-    v-for="(comment,index) in DataList"
+    <div
+    v-for="(comment,index) in comment_list"
     :key="index"
     >
       <p style="text-align:left;">
@@ -49,13 +49,8 @@
     <br>
     <hr>
     </div>
-    <div v-if="comment_list" >
-    <v-pagination dark style="active.color:white;"
-    v-model="curPageNum"    
-    :length="numOfPages"
-    ></v-pagination>
+
     </div>
-  </div>
   </div>
 </template>
 
@@ -69,7 +64,6 @@ export default {
   name:"BoardDetailComment",
   props:{
     board_pk:Number,
-    board_num:String,
   },
   data:function(){
     return{
@@ -82,9 +76,7 @@ export default {
       isUpdated: null,
       exist : null,
       category:null,
-      dataPerPage:5,
-      curPageNum:1,
-      comment_cnt:0,
+      comment_cnt : 0,
     }
   },
   computed:{
@@ -94,26 +86,14 @@ export default {
     ...mapState(
       userStore,
       ['LoginUser',]
-    ),
-    startOffset(){
-      return ((this.curPageNum-1) * this.dataPerPage)
-    },
-    endOffset(){
-      return (this.startOffset + this.dataPerPage)
-    },
-    numOfPages(){
-      return Math.ceil(this.comment_list.length / this.dataPerPage)
-    },
-    DataList(){
-      return this.comment_list.slice(this.startOffset, this.endOffset)
-    }
+    )
   },
   methods:{
     updateValue:function(Id,index){
       const update = document.getElementById('editvalue').value
       axios({
         method:'put',
-        url:`http://127.0.0.1:8000/community/chat_comments/${Id}/`,
+        url:`http://127.0.0.1:8000/community/review_comments/${Id}/`,
         data: {content:update},
         headers: this.$store.state.config
       })
@@ -135,7 +115,7 @@ export default {
       const boardId = this.board_pk
       axios({
         method:'post',
-        url:`http://127.0.0.1:8000/community/${boardId}/chat_comments/`,
+        url:`http://127.0.0.1:8000/community/${boardId}/review_comments/`,
         data, 
         headers: this.$store.state.config
       })
@@ -160,14 +140,13 @@ export default {
     const boardId = this.board_pk
     axios({
       method:'get',
-      url:`http://127.0.0.1:8000/community/${boardId}/chat_comments/`,
+      url:`http://127.0.0.1:8000/community/${boardId}/review_comments/`,
       headers: this.$store.state.config
     })
     .then(res=>{
       this.exist = true
       this.comment_list = res.data 
       this.comment_cnt = res.data.length
-      this.$store.dispatch('Comment_cnt',this.board_pk,this.comment_cnt)
       this.isUpdated = Array(this.comment_list.length).fill(false)
       this.updated_list = []
       this.created_list = []
@@ -189,7 +168,7 @@ export default {
     DeleteComment:function(Id){
       axios({
         method:'delete',
-        url:`http://127.0.0.1:8000/community/chat_comments/${Id}/`,
+        url:`http://127.0.0.1:8000/community/review_comments/${Id}/`,
         headers: this.$store.state.config
       })
       .then(()=>{
@@ -235,6 +214,5 @@ input{
   color:black;
   background-color: cadetblue;
 }
-
 
 </style>

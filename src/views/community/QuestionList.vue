@@ -2,6 +2,11 @@
   <div class = "container">
     <h3 style="color:white">1:1 문의</h3>
     <hr>
+    <v-row>
+      <v-col cols="auto">
+      <v-btn tile outlined dark @click="chatsCreate">Create</v-btn>
+      </v-col>
+    </v-row>
     <board-list-item
     :boardList="filtering"
     >
@@ -17,6 +22,11 @@ export default {
   name: 'Question',
   components:{
     BoardListItem,
+  },
+  methods:{
+    chatsCreate:function(){
+      this.$router.push({name:'BoardCreate', query:{category:'question'}})
+    },
   },
   computed:{
     ...mapState([
