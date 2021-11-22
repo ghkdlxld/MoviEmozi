@@ -71,8 +71,8 @@ export default {
   name:"BoardCreate",
   data:function(){
     return{
-      title : null,
-      content : null,
+      title : '',
+      content : '',
       isNull_title : false,
       isNull_content : false,
       movie_select : null,
@@ -89,12 +89,11 @@ export default {
     },
     create:function(){
       const movieId = this.movieTitle.indexOf(this.movie_select) + 1
-      // var content = this.content.replace("\r\n","<br>")
-      var content = this.content.replace(/"\n"/gi,"</br>")
       if (movieId === 0){
         this.isNull_movie = true
       }
-      else{
+      else if (this.content.trim() && this.title.trim() && this.movie_select){
+      var content = this.content.replace(/"\n"/gi,"</br>")
       axios({
         method:'post',
         url:`http://127.0.0.1:8000/community/${movieId}/reviews/`,
@@ -104,6 +103,23 @@ export default {
       .then(res=>{
         this.$router.push({name:'ReviewDetail', params: {reviewId:res.data.id}})
       })
+      }
+      else if (this.content.trim()){
+        this.isNull_content = false
+        this.isNull_title = true
+        this.isNull_movie = true
+      } else if (this.title.trim()){
+        this.isNull_content = true
+        this.isNull_title = false
+        this.isNull_movie = true
+      } else if (this.movie_select){
+        this.isNull_title = true
+        this.isNull_content = true
+        this.isNull_movie = false
+      } else {
+        this.isNull_movie = true
+        this.isNull_content = true
+        this.isNull_title = true
       }
     }
   },

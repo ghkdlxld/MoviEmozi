@@ -32,7 +32,8 @@
               > 
                 <td>{{ board.id }}</td>
                 <td>{{ boardNum[board.board_num] }}</td>
-                <td>{{ board.title }} &nbsp; ({{likeCnt(board.id)}})</td>
+                
+                <td>{{ board.title }} &nbsp; </td>
                 <td>{{ userNameList[board.user]}}</td>
                 <td>{{board.updated_at | dateFormat}}</td>
               </tr>
@@ -48,10 +49,10 @@
     </div>
   </div>
 </template>
-
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 <script>
 import { mapState } from 'vuex'
-import axios from 'axios'
+import _ from 'lodash'
 
 const userStore = 'userStore'
 
@@ -74,25 +75,6 @@ export default {
       else{
         this.$router.push({name:'Login'})
       }
-    },
-    likeCnt : function(id){
-      var cnt = 0
-      axios({
-        method:'get',
-        url:`http://127.0.0.1:8000/community/${id}/chat_comments/`,
-        headers: this.$store.state.config
-      })
-      .then(res=>{
-        cnt = res.data.length
-        console.log(res)
-      })
-      .catch(err=>{
-        if (err.response.status === 404){
-          console.log(err)
-          cnt = 0
-        }
-      })
-      return cnt
     },
     
   },

@@ -359,14 +359,6 @@ export default {
       }
     },
 
-    deleteStar: function (author) {
-      const rank
-      axios({
-        method: 'delete',
-        url: `http://127.0.0.1:8000/movies/${}/rank_update/?rank=1`
-        // rank_pk말고 userpk가 편할듯
-      })
-    }
   },
 
   computed:{

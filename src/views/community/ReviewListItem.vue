@@ -25,13 +25,14 @@
             </thead>
             <tbody>
               <tr
-                v-for="review in DataList"
+                v-for="(review) in DataList"
                 :key="review.id"
                 @click="moveToDetail(review.id)"
               >
                 <td>{{ review.id }}</td>
-                <td>{{movieTitle['movieTitle'][review.movie_id-1]}}</td>
-                <td>{{ review.title }} &nbsp; ({{likeCnt(review.id)}})</td>
+                <td>{{movieTitle['movieTitle'][(review.movie_id-1)]}}</td>
+                <!-- {{ImportComment(review.id)}} -->
+                <td>{{ review.title }} &nbsp; </td>
                 <td>{{userNameList[review.user]}}</td>
                 <td>{{review.updated_at |dateFormat}}</td>
               </tr>
@@ -51,7 +52,6 @@
 
 <script>
 import {mapState} from 'vuex'
-import axios from 'axios'
 
 const movieTitle = 'movieTitle'
 
@@ -70,21 +70,16 @@ export default {
     moveToDetail:function(reviewId){
       this.$router.push({name:'ReviewDetail', params: {reviewId:reviewId}})
     },
-    likeCnt : function(id){
-      var cnt = 0
-      axios({
-        method:'get',
-        url:`http://127.0.0.1:8000/community/${id}/review_comments/`,
-        headers: this.$store.state.config
-      })
-      .then(res=>{
-        cnt = res.data.length
-      })
-      return cnt
-    },
     
   },
   computed:{
+    comment_cnt(){
+      var cnt = 0
+      if (this.comment_list){
+        cnt = this.comment_list.length
+      }
+      return cnt
+    },
     ...mapState([
       'userNameList',
     ]),
@@ -125,6 +120,23 @@ export default {
       return year + '-' + month+'-'+day+' '+hour+':'+minute;
     }
   },
+  // created:function(){
+  //   for (let i=1; i<this.reviewList.length+1; i++){
+  //     axios({
+  //       method:'get',
+  //       url:`http://127.0.0.1:8000/community/${i}/review_comments/`,
+  //       headers: this.$store.state.config
+  //     })
+  //     .then(res=>{
+  //       this.cnt_list.push(res.data.length)
+  //     })
+  //     .catch((err)=>{
+  //       if(err.response.status===404){
+  //         this.cnt_list.push(0)
+  //       }
+  //     })
+  //   }
+  // }
 }
 </script>
 

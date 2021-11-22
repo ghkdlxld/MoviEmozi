@@ -10,19 +10,21 @@
     <hr>
     <div v-if="!isUpdated">
     <span style="font-size:20px; text-align:left;">Title: {{detail.title}} </span> &nbsp;
-    <div id="like"><v-btn @click="like" small><v-icon>{{likeIcon}}</v-icon></v-btn></div>
+    <div id="like"><v-btn @click="like" small v-show="detail.user !== LoginUser"><v-icon>{{likeIcon}}</v-icon></v-btn></div>
       <v-btn id="edit" @click="isUpdated=true" v-show="detail.user === LoginUser">
         <v-icon left>mdi-pencil</v-icon><b> Edit</b>
       </v-btn>
     <hr>
+    <div align="right">
+    <span style="font-size:15px;">{{likeCnt}} 명이 이 글을 좋아합니다. </span>
+    </div>
+    <br>
     <div align='left'>
       <span id="user">작성자 : {{detail.user}} </span>
-      <span id="time" class="my-0">등록시각 : {{created}}</span><br>
-      <span id="time">수정시각 : {{updated}}</span>
     </div>
     <br>
     <div align="left">
-    <img :src="imageUrl" alt="image" style="width: 13rem; height: 310px;">
+    <img :src="imageUrl()" alt="image" style="width: 13rem; height: 310px;">
     </div>
       <div class="my-3" align='left'>
         <div id="content" style="white-space:pre;">내용 :  <br>
@@ -35,6 +37,11 @@
         <v-icon left> mdi-delete</v-icon> <b>Delete</b>
       </v-btn>
       </div>
+      <div align='left'>
+      <span id="time" class="my-0">등록시각 : {{created}}</span><br>
+      <span id="time">수정시각 : {{updated}}</span>
+      </div>
+      <br>
       </div>
 
       <div v-else align="left">
@@ -98,7 +105,6 @@ export default {
       reviewId : null,
       isNull_title : false,
       isNull_content : false,
-      movie_poster: null,
       isLiked : false,
       likeCnt : 0,
     }
@@ -119,12 +125,13 @@ export default {
       movieTitle,
       ['movieTitle']
     ),
-    imageUrl: function(){
-    const imagePath = this.movie_poster
-    return `https://image.tmdb.org/t/p/original${imagePath}`
-    }
   },
   methods:{
+    imageUrl : function(){
+      const movieId = this.movieTitle.indexOf(this.detail.movie)
+      const imagePath = this.movieList[movieId]['poster_path']
+      return `https://image.tmdb.org/t/p/original${imagePath}` 
+    },
     like:function(){
       axios({
         method:'post',
@@ -196,9 +203,6 @@ export default {
         this.detail = res.data
         this.title = res.data.title
         this.content = res.data.content
-        const movieId = this.movieTitle.indexOf(res.data.movie)
-        this.movie_poster = this.movieList[movieId]['poster_path']
-
         this.$store.dispatch('dateFormat',this.detail.updated_at)
         this.updated = this.$store.state.date
 
@@ -222,6 +226,15 @@ export default {
   created: function(){
     this.CreateReviewDetail()
     this.$store.dispatch('loadMovieList')
+    axios({
+        method:'get',
+        url:`http://127.0.0.1:8000/community/${this.reviewId}/review_like/`,
+        headers: this.$store.state.config
+      })
+      .then(res=>{
+        this.likeCnt = res.data.count
+        this.isLiked = res.data.like
+      })
   },
   updated:function(){
     this.$store.dispatch('CreateUserList')

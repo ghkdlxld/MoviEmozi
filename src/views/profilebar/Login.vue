@@ -44,7 +44,12 @@ export default {
         this.$store.dispatch('userStore/getLoginUser', this.user.username)
         this.$store.dispatch('Login')
         if (document.referrer){
+          if (document.referrer === 'http://localhost:8080/profilebar/signup'){
+            this.$router.push({name:'Home'})
+          }
+          else{
           history.back();
+          }
         }
         else{
         this.$router.push({name:'Home'})
@@ -54,7 +59,7 @@ export default {
         console.log(err)
       })
     }
-  },
+  }
 }
 </script>
 

@@ -72,14 +72,12 @@ export default {
   data:function(){
     return{
       category : this.$route.query.category,
-      title : null,
-      content : null,
+      title : '',
+      content : '',
       isNull_title : false,
       isNull_content : false,
-      items : [
-        {name:'자유', value:'1'},{name:'건의',value:'2'},
-      {name:'영화추천',value:'3'},{name:'파티모집',value:'4'}],
       category_select : '1',
+      
     }
   },
   methods:{
@@ -95,16 +93,27 @@ export default {
       this.title = '';
     },
     create:function(){
-      var content = this.content.replace(/"\n"/gi,"</br>")
-      axios({
-        method:'post',
-        url:`http://127.0.0.1:8000/community/chats/`,
-        data:{title:this.title, content:content, board_num:this.category_select},
-        headers: this.$store.state.config
-      })
-      .then(res=>{
-        this.$router.push({name:'BoardDetail', params: {chatId:res.data.id}})
-      })
+      if (this.content.trim() && this.title.trim()){
+        var content = this.content.replace(/"\n"/gi,"</br>")
+        axios({
+          method:'post',
+          url:`http://127.0.0.1:8000/community/chats/`,
+          data:{title:this.title, content:content, board_num:this.category_select},
+          headers: this.$store.state.config
+        })
+        .then(res=>{
+          this.$router.push({name:'BoardDetail', params: {chatId:res.data.id}})
+        })
+      } else if (this.title.trim()){
+        this.isNull_title = false
+        this.isNull_content = true
+      } else if (this.content.trim()){
+        this.isNull_title = true
+        this.isNull_content = false
+      } else{
+        this.isNull_content = true
+        this.isNull_title = true
+      }
       
     }
   },
@@ -112,8 +121,22 @@ export default {
     ...mapState(
       userStore,
       ['LoginUser',]
-    )
+    ),
+    items(){
+      if (this.category === 'question'){
+        return [{name:'건의', value:'2'}]
+      } else{
+       return [
+        {name:'자유', value:'1'},{name:'건의',value:'2'},
+      {name:'영화추천',value:'3'},{name:'파티모집',value:'4'}]
+      }
+    },
   },
+  created:function(){
+    if (this.category === 'question'){
+      this. category_select = '2'
+    } 
+  }
 
 }
 </script>

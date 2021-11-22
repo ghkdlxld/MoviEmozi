@@ -44,12 +44,12 @@ const routes = [
   },
   // 게시판 상세 페이지
   {
-    path:'/community/:chatId/detail',
+    path:'/community/:chatId/chat_detail',
     name: 'BoardDetail',
     component: BoardDetail
   },
   {
-    path:'/community/:reviewId/detail',
+    path:'/community/:reviewId/review_detail',
     name: 'ReviewDetail',
     component: ReviewDetail
   },
@@ -59,12 +59,12 @@ const routes = [
     name: 'QuestionList',
     component: QuestionList
   },
-  // // 프로필 (signup, login / logout, myprofile)
-  // {
-  //   path: '/profile',
-  //   name: 'Profile',
-  //   component: Profile
-  // },
+  // 프로필 (signup, login / logout, myprofile)
+  {
+    path: '/profile/:username/',
+    name: 'MyProfile',
+    component: MyProfile
+  },
   {
     path: '/profilebar/signup',
     name: 'Signup',

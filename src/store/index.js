@@ -30,6 +30,8 @@ const store = new Vuex.Store({
     betweenDate : null,   // 몇분전, 방금전 등으로 출력
     movieList: null,
     shortments: null,
+    comment_cnt_lst : {},
+    userList : null,
   },
   mutations: {
     CREATE_CHAT_LIST:function(state, chatlst){
@@ -42,6 +44,7 @@ const store = new Vuex.Store({
       list.forEach(user=>{
         state.userNameList.push(user.username)
       })
+      state.userList = list
     },
     LOGOUT:function(state){
       state.config = null
@@ -70,7 +73,11 @@ const store = new Vuex.Store({
     },
     DATE_BETWEEN:function(state,date){
       state.betweenDate = date
-    }
+    },
+    COMMENT_CNT:function(state,index,cnt){
+      state.comment_cnt_lst[index] = cnt
+    },
+
 
 
 
@@ -123,6 +130,10 @@ const store = new Vuex.Store({
       }
       commit('SET_TOKEN', config)
     },
+    Comment_cnt:function({commit},index,cnt){
+      commit('COMMENT_CNT',index,cnt)
+    },
+
     
 
 
