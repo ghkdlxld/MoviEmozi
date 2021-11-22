@@ -20,8 +20,10 @@ export default {
       isLogin: false,
     }
   },
+  methods: {
+  },
   created: function() {
-    this.$store.dispatch('loadMovieList')
+    // this.$store.dispatch('loadMovieList')
 
     if (localStorage.getItem('jwt')){
       this.isLogin = true

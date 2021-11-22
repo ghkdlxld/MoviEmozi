@@ -29,6 +29,7 @@ const store = new Vuex.Store({
     betweenDate : null,   // 몇분전, 방금전 등으로 출력
     movieList: null,
     shortments: null,
+    selectGenre: null,
   },
   mutations: {
     CREATE_CHAT_LIST:function(state, chatlst){
@@ -61,6 +62,15 @@ const store = new Vuex.Store({
     ADD_SHORTMENT: function(state, shortment){
       state.shortments.push(shortment)
     },
+    SELECT_GENRE: function(state, genre) {
+      state.selectGenre = genre
+    },
+
+
+
+
+
+
     SET_TOKEN:function(state,config){
       state.config = config
     },
@@ -177,6 +187,11 @@ const store = new Vuex.Store({
       .catch(err => {
         console.log(err)
       })
+    },
+
+
+    selectGenre: function ({commit}, genre) {
+      commit('SELECT_GENRE', genre)
     },
 
 

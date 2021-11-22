@@ -1,26 +1,31 @@
 <template>
   <div>
     <!-- movieCard -->
-    <div class="d-flex justify-content-center">
-      <div class="card bg-dark text-white" style="width: 13rem; height: 310px;">
-        <img :src="imageUrl" class="card-img-top" alt="image" style="width: 13rem; height: 310px;">
-        <div 
-        @mouseover="Detail=true" 
-        @mouseout="Detail=false"
-        class="card-img-overlay p-0"
-        >
-          <button 
-          v-show="Detail"
-          class="card bg-dark m-0 p-2" 
-          style="border-box; width: 13rem; height: 310px; opacity: 0.7;"
-          data-bs-toggle="modal" :data-bs-target="`#exampleModal-${movieCard.id}`"
-          @click="[getVideo(), getShortMent(), getStarAvg()]">
-            <p class="card-title">{{movieCard.title}}</p>
-            <p class="card-text">{{movieCard.popularity}} | {{movieCard.runtime}} 분</p>
-            <p class="card-text">{{movieCard.genres}}</p>
-          </button>
+    <div class="slow">
+      <div class="d-flex justify-content-center">
+        <div class="card bg-dark text-white" style="width: 13rem; height: 310px;">
+          <img :src="imageUrl" class="card-img-top rounded rounded-3" alt="image" style="height: 310px; width:13rem">
+          <div 
+          @mouseover="Detail=true" 
+          @mouseout="Detail=false"
+          class="card-img-overlay p-0"
+          >
+            <button 
+            v-show="Detail"
+            class="card bg-dark" 
+            style="border-box; width: 13rem; height: 310px; opacity: 0.7;"
+            data-bs-toggle="modal" :data-bs-target="`#exampleModal-${movieCard.id}`"
+            @click="[getVideo(), getShortMent(), getStarAvg(), getLikeState()]">
+              <div class="container" style="width: 13rem; height: 310px; ">
+                <div class="card-title fw-bold mt-3" style="color: gold;">{{movieCard.title}}</div>
+                <div class="card-text">{{genreNoArray}}</div>
+                <div class="card-text">{{movieCard.popularity}} | {{movieCard.runtime}} 분</div>
+              </div>
+            </button>
+          </div>
         </div>
       </div>
+
     </div>
 
 
@@ -37,14 +42,26 @@
           <!-- body -->
           <div class="modal-body container">
             <div class="d-flex justify-content-between">
-              <h3 class="text-start">{{ movieCard.title }}</h3>
+              <div class="d-flex">
+                <h3 class="text-start mt-1">{{ movieCard.title }}</h3>
+                <div v-if="isLike">
+                  <button @click="bookmarkMovie">
+                    <v-icon large style="color: silver;" class="mb-3 mx-2">mdi-bookmark-multiple </v-icon>
+                  </button>
+                </div>
+                <div v-else>
+                  <button @click="bookmarkMovie">
+                    <v-icon x-large style="color: silver;" class="mb-3 mx-2">mdi-bookmark-plus-outline</v-icon>
+                  </button>
+                </div>
+              </div>
               <div class="mx-4 d-flex">
                 <div class="fs-2 mx-1">{{ averageRank }}</div><div style="color: grey;" class="mt-4"> / 5</div>
-                <v-icon x-large style="color: goldenrod;">mdi-star</v-icon><div class="fw-light mx-2 mb-1" style="font-size: 35px;">|</div>
+                <v-icon x-large style="color: goldenrod;">mdi-star</v-icon>
 
               </div>
             </div>
-            <header class="text-start d-flex justify-content-between">
+            <header class="text-start d-flex justify-content-between align-items-center">
               <div>
                 <span>popularity {{ movieCard.popularity}}</span>
                 <span class="mx-3">{{ movieCard.release_date}} 개봉 </span>
@@ -71,25 +88,45 @@
                 <div class="d-flex">
                   <div class="mx-1">{{ userNameList[shortment.user] || shortment.user}}</div>
                   <!-- user가 준 별점 갯수 -->
-                  <div class="mx-2">
-                    <span v-for="(Info, i) in movieRankInfo" :key="i">
-                      <span v-if="Object.keys(Info)[0] === userNameList[shortment.user]">
-                        <span v-for="(n,i) in Info[userNameList[shortment.user]]" :key="i+'l'">
-                          <v-icon small style="color: goldenrod;">mdi-star</v-icon>
-                        </span>
-                        <span v-for="(n, i) in (5-Info[userNameList[shortment.user]])" :key="i+'r'">
-                          <v-icon small style="color: goldenrod;">mdi-star-outline</v-icon>
+                  <!-- rank 수정된 후, 평소 값 -->
+                  <div v-if="isRankUpdate[1]===false">
+                    <div class="mx-2">
+                      <span v-for="(Info, i) in movieRankInfo" :key="i">
+                        <span v-if="Object.keys(Info)[0] === userNameList[shortment.user]">
+                          <span v-for="(n,i) in Info[userNameList[shortment.user]]" :key="i+'a'">
+                            <v-icon small style="color: goldenrod;">mdi-star</v-icon>
+                          </span>
+                          <span v-for="(n, i) in (5-Info[userNameList[shortment.user]])" :key="i+'b'">
+                            <v-icon small style="color: goldenrod;">mdi-star-outline</v-icon>
+                          </span>
                         </span>
                       </span>
-                    </span>
+                    </div>
+                  </div>
+
+                  <!-- rank 수정 -->
+                  <div v-else>
+                    <div class="mx-2">
+                      <span v-for="(star, i) in updateStars" :key="i">
+                        <button @click="toggleUpdateStar(i)">
+                          <div v-if="updateStars[i]">
+                            <v-icon style="color: goldenrod; width: 20px;" class="mx-1">mdi-star</v-icon></div>
+                          <div v-else>
+                            <v-icon small style="color: goldenrod;" class="mx-1">mdi-star-outline</v-icon></div>
+                        </button>
+                      </span>
+                    </div>
                   </div>
                 </div>
 
                 
                 <div class="mx-3">
-                  <button  @click="modifyShortment(shortment.id, shortment.user)" class="mx-2">
+                  <button  
+                  @click="[modifyShortment(shortment.id, shortment.user), 
+                            modifyStar(shortment.user)]" class="mx-2">
                     <v-icon small style="color: silver;">mdi-pencil</v-icon>
                   </button>
+
                   <button @click="[deleteShortment(shortment.id, shortment.user), deleteStar(shortment.user)]">
                     <v-icon small style="color: silver;">mdi-trash-can</v-icon>
                   </button>
@@ -180,12 +217,16 @@ export default {
     return {
       Detail: false,
       stars: [false, false, false, false, false],
+      updateStars: [false, false, false, false, false],
       videoUrl: null,
       shortmentInput: null,
       isLogin: false,
       isUpdate: [0, false],
+      isRankUpdate: [0, false],
       movieRankInfo: [],
       averageRank: 0,
+      isLike: false,
+      genreNoArray: '',
     }
   },
   methods:{
@@ -214,7 +255,6 @@ export default {
 
     addShortment: function() {
       const giveStar = this.alreadyGiveRank()
-      console.log(giveStar)
 
       if (!giveStar) {
         const data = {
@@ -260,7 +300,6 @@ export default {
       }
     },
 
-
     wantUpdate: function(shortmentId){
       this.isUpdate = [shortmentId, !this.isUpdate[1]]
     },
@@ -281,6 +320,7 @@ export default {
     },
       
 
+    // Rank
     toggleStar: function(index) {
       let starsState = Array(5).fill(false)
       if (index > 0) {
@@ -313,7 +353,7 @@ export default {
           ans.push(InfoObj)
         }
         this.movieRankInfo = ans
-        console.log(this.movieRankInfo)
+
 
 
         let total = 0
@@ -323,16 +363,11 @@ export default {
             total += Info[i]
           }
         }
-        this.averageRank = (total/personNum).toFixed(1)
-        if (isNaN(this.averageRank)) {
-          this.averageRank = 0
-        }
+        this.averageRank = 
+        ((total + ((this.movieCard.vote_average/2) * this.movieCard.vote_count)) / (personNum + this.movieCard.vote_count)).toFixed(1)
         this.getShortMent()
       })
     },
-
-
-
 
 
     addRank: function() {
@@ -352,19 +387,103 @@ export default {
         })
         .then(() => {
           this.stars = Array(5).fill(false)
-          this.getShortMent()
+          this.getStarAvg()
         })
-      } else {
-        alert('평점을 바꾸길 원하신다면 상단의 "평점 수정하기"를 눌러주세요')
       }
     },
 
+    toggleUpdateStar: function(index) {
+      let starsState = Array(5).fill(false)
+      if (index > 0) {
+        for (let i=0; i <= index; i++) {
+          starsState[i] = true
+        }
+      } 
+      else if (this.updateStars[0] == true && this.updateStars[1] == false) {
+        starsState.fill(false)
+      } 
+      else {
+        for (let i=0; i <= index; i++) {
+          starsState[i] = true
+        }
+      }
+      this.updateStars = starsState
+    },
+
+    modifyStar: function(author) {
+      if (this.LoginUser === author || this.LoginUser === this.userNameList[author]){
+        // false 였다면 -> true로 변경(수정할 폼 보여주기, 폼은 [1]이 true일때 보임)
+        if (this.isRankUpdate[1] === false) {
+          this.isRankUpdate = [author, !this.isRankUpdate[1]]
+          this.getStarAvg()
+        } else {
+          // true 였다면 -> 입력된 값을 axios 넘겨주기
+
+          let countStar = 0
+            for (let i=0; i<5; i++){
+              if (this.updateStars[i] === true) {
+                countStar ++
+              }
+            }
+
+          const user_pk = this.userNameList.indexOf(this.LoginUser)
+          axios({
+            method: 'put',
+            url: `http://127.0.0.1:8000/movies/${user_pk}/rank_update/`,
+            data: {rank:countStar},
+            headers: this.$store.state.config
+          })
+          .then(() => {
+            this.getStarAvg()
+            this.isRankUpdate = [author, !this.isRankUpdate[1]]
+          })
+        }
+      }
+    },
+
+
     deleteStar: function (author) {
-      const rank
+      if (this.LoginUser === author || this.LoginUser === this.userNameList[author]){
+        const user_pk = this.userNameList.indexOf(this.LoginUser)
+        axios({
+          method: 'delete',
+          url: `http://127.0.0.1:8000/movies/${user_pk}/rank_update/`,
+          headers: this.$store.state.config
+        })
+        .then(()=>{
+          this.getStarAvg()
+        })
+      } 
+    },
+
+    getLikeState: function () {
+      const movieId = this.movieCard.id
+        axios({
+          method: 'get',
+          url: `http://127.0.0.1:8000/movies/${movieId}/like/`,
+          headers: this.$store.state.config
+        })
+        .then(res => {
+          for (let movie of res.data) {
+            if (movie['id'] === this.movieCard.id) {
+              this.isLike = true
+              break
+            }
+          }
+        })
+    },
+
+    bookmarkMovie: function () {
+      const movieId = this.movieCard.id
+
       axios({
-        method: 'delete',
-        url: `http://127.0.0.1:8000/movies/${}/rank_update/?rank=1`
-        // rank_pk말고 userpk가 편할듯
+        method: 'post',
+        url: `http://127.0.0.1:8000/movies/${movieId}/like/`,
+        headers: this.$store.state.config
+      })
+      .then(res => {
+        console.log(res)
+        this.isLike = res.data.liked
       })
     }
   },
@@ -381,6 +500,12 @@ export default {
       const imagePath = this.movieCard['poster_path']
       return `https://image.tmdb.org/t/p/original${imagePath}`
     },
+
+    backdropUrl: function() {
+      const backdropPath = this.movieCard['backdrop_path']
+      return `https://image.tmdb.org/t/p/original${backdropPath}`
+    }
+
   },
 
   created: function() {
@@ -388,6 +513,13 @@ export default {
       this.isLogin = true
       this.$store.dispatch('setToken')
       this.$store.dispatch('Login')
+    }
+    
+    for (var genre of this.movieCard.genres) {
+      var array = ['[', ']', ',', "'"]
+      if (!array.includes(genre)){
+        this.genreNoArray += genre
+      }
     }
   }
 }
@@ -418,4 +550,7 @@ export default {
       background-color:rgb(204, 204, 204);
       -webkit-box-shadow: inset 0 0 1px rgba(90,90,90,0.7);
   }
+
+
+
 </style>
