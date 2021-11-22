@@ -9,6 +9,8 @@ import MyProfile from '@/views/profilebar/MyProfile.vue'
 import BoardDetail from '@/views/community/BoardDetail.vue'
 import ReviewDetail from '@/views/community/ReviewDetail.vue'
 import ReviewList from '@/views/community/ReviewList.vue'
+import BoardCreate from '@/views/community/BoardCreate.vue'
+import ReviewCreate from '@/views/community/ReviewCreate.vue'
 
 Vue.use(VueRouter)
 
@@ -29,14 +31,25 @@ const routes = [
     name:'ReviewList',
     component:ReviewList
   },
+  // 글 쓰기 
+  {
+    path: '/community/create',
+    name:'BoardCreate',
+    component:BoardCreate
+  },
+  {
+    path:'/community/review/create',
+    name:'ReviewCreate',
+    component:ReviewCreate
+  },
   // 게시판 상세 페이지
   {
-    path:'/community/:chatId/detail',
+    path:'/community/:chatId/chat_detail',
     name: 'BoardDetail',
     component: BoardDetail
   },
   {
-    path:'/community/:reviewId/detail',
+    path:'/community/:reviewId/review_detail',
     name: 'ReviewDetail',
     component: ReviewDetail
   },
@@ -46,12 +59,12 @@ const routes = [
     name: 'QuestionList',
     component: QuestionList
   },
-  // // 프로필 (signup, login / logout, myprofile)
-  // {
-  //   path: '/profile',
-  //   name: 'Profile',
-  //   component: Profile
-  // },
+  // 프로필 (signup, login / logout, myprofile)
+  {
+    path: '/profile/:username/',
+    name: 'MyProfile',
+    component: MyProfile
+  },
   {
     path: '/profilebar/signup',
     name: 'Signup',

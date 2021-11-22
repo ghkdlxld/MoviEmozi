@@ -5,6 +5,7 @@ import Vuetify from 'vuetify'
 import colors from 'vuetify/es5/util/colors'
 import createPersistedState from 'vuex-persistedstate'
 import userStore from '@/store/userStore'
+import movieTitle from '@/store/movieTitle'
 
 
 Vue.use(Vuex)
@@ -29,7 +30,8 @@ const store = new Vuex.Store({
     betweenDate : null,   // 몇분전, 방금전 등으로 출력
     movieList: null,
     shortments: null,
-    selectGenre: null,
+    comment_cnt_lst : {},
+    userList : null,
   },
   mutations: {
     CREATE_CHAT_LIST:function(state, chatlst){
@@ -42,6 +44,7 @@ const store = new Vuex.Store({
       list.forEach(user=>{
         state.userNameList.push(user.username)
       })
+      state.userList = list
     },
     LOGOUT:function(state){
       state.config = null
@@ -79,7 +82,11 @@ const store = new Vuex.Store({
     },
     DATE_BETWEEN:function(state,date){
       state.betweenDate = date
-    }
+    },
+    COMMENT_CNT:function(state,index,cnt){
+      state.comment_cnt_lst[index] = cnt
+    },
+
 
 
 
@@ -132,17 +139,22 @@ const store = new Vuex.Store({
       }
       commit('SET_TOKEN', config)
     },
+    Comment_cnt:function({commit},index,cnt){
+      commit('COMMENT_CNT',index,cnt)
+    },
+
     
 
 
 
-    loadMovieList: function({commit}) {
+    loadMovieList: function({commit,dispatch}) {
       axios({
         method: 'get',
         url: 'http://127.0.0.1:8000/movies/',
       })
       .then(res => {
         commit('LOAD_MOVIE_LIST', res.data)
+        dispatch('movieTitle/getMovieTitle')
       })
     },
     getShortMent: function({commit, dispatch, state}, movie_pk) {
@@ -236,11 +248,12 @@ const store = new Vuex.Store({
   },
 
   modules: {
-    userStore: userStore
+    userStore: userStore,
+    movieTitle : movieTitle,
   },
   plugins: [
     createPersistedState({
-      paths: ['userStore'],
+      paths: ['userStore','movieTitle'],
     })
   ]
 })
