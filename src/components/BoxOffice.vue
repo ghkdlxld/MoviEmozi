@@ -8,14 +8,18 @@
       :controls-next-html="'&#10093;'" 
       :height="485" :width="340"
       :clickable="false">
+      
         <slide 
         v-for="(slide, i) in slides" 
         :index="i"
         :key="i"
         class="border border-dark"
         >
+        
           <figure v-if="topTenPosterPath[i]">
+            <v-card elevation="12">
             <img :src="`https://image.tmdb.org/t/p/original/${topTenPosterPath[i]}`">
+        </v-card>
           </figure>
         </slide>
       </carousel-3d>

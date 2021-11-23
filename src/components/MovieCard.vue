@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- movieCard -->
-    <div class="slow">
+    
       <div class="d-flex justify-content-center">
         <div class="card bg-dark text-white" style="width: 13rem; height: 310px;">
           <img :src="imageUrl" class="card-img-top rounded rounded-3" alt="image" style="height: 310px; width:13rem">
@@ -26,7 +26,6 @@
         </div>
       </div>
 
-    </div>
 
 
     <!-- modal -->
@@ -40,7 +39,7 @@
           </div>
 
           <!-- body -->
-          <div class="modal-body container">
+          <div class="modal-body container background-image">
             <div class="d-flex justify-content-between">
               <div class="d-flex">
                 <h3 class="text-start mt-1">{{ movieCard.title }}</h3>
@@ -550,7 +549,6 @@ export default {
       background-color:rgb(204, 204, 204);
       -webkit-box-shadow: inset 0 0 1px rgba(90,90,90,0.7);
   }
-
 
 
 </style>

@@ -147,10 +147,11 @@ const store = new Vuex.Store({
 
 
 
-    loadMovieList: function({commit,dispatch}) {
+    loadMovieList: function({commit,dispatch, state}) {
       axios({
         method: 'get',
         url: 'http://127.0.0.1:8000/movies/',
+        headers: state.config
       })
       .then(res => {
         commit('LOAD_MOVIE_LIST', res.data)
@@ -161,6 +162,7 @@ const store = new Vuex.Store({
       axios({
         method: 'get',
         url: `http://127.0.0.1:8000/movies/${movie_pk}/shortment_list/`,
+        headers: state.config
       })
       .then(res =>{
         if(res.status === 204) {
