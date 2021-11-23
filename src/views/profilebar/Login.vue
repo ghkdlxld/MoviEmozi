@@ -44,8 +44,12 @@ export default {
         this.$store.dispatch('userStore/getLoginUser', this.user.username)
         this.$store.dispatch('Login')
         if (document.referrer){
-          if (document.referrer === 'http://localhost:8080/profilebar/signup'){
-            this.$router.push({name:'Home'})
+          if (this.$route.query.isSign){
+            this.$router.push({name:'Home'})}
+          else if (this.$route.query.category === 'review'){
+            this.$router.push({name:'ReviewList'})
+          } else if (this.$route.query.category === 'question'){
+            this.$router.push({name:'QuestionList'})
           }
           else{
           history.back();

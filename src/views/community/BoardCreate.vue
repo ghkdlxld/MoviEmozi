@@ -45,7 +45,7 @@
         type="text"
         auto-grow
         filled
-        style="background-color:white;"
+        style="color:black;"
         v-model="content"
         >
         </v-textarea>

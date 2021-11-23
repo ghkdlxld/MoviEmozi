@@ -32,6 +32,7 @@ const store = new Vuex.Store({
     shortments: null,
     comment_cnt_lst : {},
     userList : null,
+    userId_name:[],
   },
   mutations: {
     CREATE_CHAT_LIST:function(state, chatlst){
@@ -43,6 +44,7 @@ const store = new Vuex.Store({
     CREATE_USER_NAME_LIST:function(state,list){
       list.forEach(user=>{
         state.userNameList.push(user.username)
+        state.userId_name.push([user.id,user.username])
       })
       state.userList = list
     },

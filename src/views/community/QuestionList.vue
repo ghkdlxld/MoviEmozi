@@ -25,12 +25,17 @@ export default {
   },
   methods:{
     chatsCreate:function(){
+      if (this.isLogin){
       this.$router.push({name:'BoardCreate', query:{category:'question'}})
+      } else{
+        this.$router.push({name:'Login',query:{category:'question'}})
+      }
     },
   },
   computed:{
     ...mapState([
-      'boardLists'
+      'boardLists',
+      'isLogin',
     ]),
     filtering:function(){
       const questions = []

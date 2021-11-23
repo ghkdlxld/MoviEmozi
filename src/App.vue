@@ -8,10 +8,10 @@
         <router-link :to="{ name: 'QuestionList' }" class="mx-2">1:1 문의</router-link>  |
 
         <!-- profile drop down => profile logout / signup login -->
-        <the-profile-bar></the-profile-bar>
+        <the-profile-bar :isLogin="isLogin"></the-profile-bar>
       </div>
     </div>
-    <router-view @login="isLogin=true" @logout="isLogin=false"/>
+    <router-view :key="$route.fullPath" @login="isLogin=true" @logout="isLogin=false"/>
   </div>
 </template>
 
@@ -35,6 +35,8 @@ export default {
     if (localStorage.getItem('jwt')){
       this.isLogin = true
       this.$store.dispatch('setToken')
+    }else{
+      this.isLogin = false
     }
   }
 }

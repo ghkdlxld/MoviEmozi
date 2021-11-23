@@ -31,14 +31,15 @@
       style="width:310px; margin-bottom:15px;"
       v-model="user.passwordConfirm"
       :rules="passwordConfirmRules"
-      label="passwordConfirm"
+      label="password Confirm"
       required
       >
       </v-text-field>
       </v-col>
-      <v-col>
-      <input type="file" @change="onInputImage()" ref="Image" class="image">
-      </v-col>
+
+
+
+
       <v-btn :class="{isvalid : !valid}" class="mx-4" @click="validate" style="margin-bottom: 20px;">
         Sign Up
       </v-btn>
@@ -66,8 +67,8 @@ export default {
         username:null,
         password : null,
         passwordConfirm : null,
-        image : '',
       },
+      files:null,
       valid : true,
       nameRules:[
         v=> !!v || '이름은 필수 입력사항입니다.',
@@ -82,11 +83,13 @@ export default {
     }
   },
   methods:{
-    onInputImage(){
-      var image = this.$refs['Image'].files[0]
-      const url = URL.createObjectURL(image)
-      this.user.image = url
-    },
+    
+
+    // onInputImage(){
+    //   var image = this.$refs['Image'].files[0]
+    //   const url = URL.createObjectURL(image)
+    //   this.user.image = url
+    // },
     validate () {
       if(this.$refs.form.validate()){
         this.signup()
@@ -103,10 +106,10 @@ export default {
       axios({
         method:'post',
         url:`http://127.0.0.1:8000/accounts/signup/`,
-        data: this.user
+        data: this.user,
       })
       .then(() =>{
-        this.$router.push({name:'Login'})
+        this.$router.push({name:'Login', query:{'isSign':true}})
       })
       .catch(err=>{
         if (err.response.status === 409){
@@ -123,10 +126,6 @@ export default {
 </script>
 
 <style>
-.image{
-  margin-bottom: 10px;
-  color:rgb(18, 92, 34);
-}
 
 .v-label{
   color:white !important;
@@ -136,6 +135,7 @@ export default {
   color:rgb(173, 7, 7);
   font-size:15px;
   padding-top: 10px;
+  color:rgb(135, 161, 89)
 }
 
 .reset{

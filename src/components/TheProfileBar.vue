@@ -27,6 +27,9 @@ export default {
     return{
     }
   },
+  props:{
+    isLogin : Boolean,
+  },
   methods:{
     logout:function(){
       this.$emit('logout')
@@ -40,9 +43,7 @@ export default {
       userStore,
       ['LoginUser',]
     ),
-    ...mapState([
-      'isLogin',
-    ])
+
   },
 }
 </script>

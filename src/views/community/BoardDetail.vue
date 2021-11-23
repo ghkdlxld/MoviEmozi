@@ -250,6 +250,6 @@ export default {
 }
 
 #updated_detail{
-  background-color:white;
+  background-color:black;
 } 
 </style>

@@ -14,6 +14,7 @@ import ReviewCreate from '@/views/community/ReviewCreate.vue'
 
 Vue.use(VueRouter)
 
+
 const routes = [
   {
     path: '/',
@@ -35,23 +36,27 @@ const routes = [
   {
     path: '/community/create',
     name:'BoardCreate',
-    component:BoardCreate
+    component:BoardCreate,
+    // beforeEnter: requireAuth
   },
   {
     path:'/community/review/create',
     name:'ReviewCreate',
-    component:ReviewCreate
+    component:ReviewCreate,
+    // beforeEnter: requireAuth
   },
   // 게시판 상세 페이지
   {
     path:'/community/:chatId/chat_detail',
     name: 'BoardDetail',
-    component: BoardDetail
+    component: BoardDetail,
+    // beforeEnter: requireAuth
   },
   {
     path:'/community/:reviewId/review_detail',
     name: 'ReviewDetail',
-    component: ReviewDetail
+    component: ReviewDetail,
+    // beforeEnter: requireAuth
   },
   // 1:1 건의
   {
@@ -63,7 +68,8 @@ const routes = [
   {
     path: '/profile/:username/',
     name: 'MyProfile',
-    component: MyProfile
+    component: MyProfile,
+    // beforeEnter: requireAuth
   },
   {
     path: '/profilebar/signup',
@@ -75,17 +81,35 @@ const routes = [
     name: 'Login',
     component: Login
   },
-  {
-    path: '/profilebar/myprofile',
-    name: 'MyProfile',
-    component: MyProfile
-  },
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  
 })
+
+// const requireAuth = (to,from,next)=>{
+//   if (store.state.isLogin) return next()
+//       next({
+//         path:'/login',
+//         query:{redirect:  to.path}
+//       })
+//     }
+// const requireAuth = router.beforeEach((to,from,next)=>{
+//   if (to.matched.some(record=> record.meta.requireAuth)){
+//     if (!store.state.isLogin){
+//       next({
+//         path:'/login',
+//         query:{redirect:  to.fullPath}
+//       })
+//     } else{
+//       next()
+//     }
+//   } else{
+//     next()
+//   }
+// })
 
 export default router

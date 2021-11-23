@@ -52,7 +52,7 @@ import {mapState} from 'vuex'
 import _ from 'lodash'
 const movieTitle = 'movieTitle'
 export default {
-  name:'Review',
+  name:'ReviewList',
   components:{
     ReviewListItem,
   },
@@ -66,7 +66,11 @@ export default {
   },
   methods:{
     reviewCreate:function(){
+      if (this.isLogin){
       this.$router.push({name:'ReviewCreate'})
+      } else{
+        this.$router.push({name:'Login',query:{category:'review'}})
+      }
     },
     autoComplete(event){
       this.movie_select = event.target.value
@@ -90,6 +94,7 @@ export default {
   computed:{
     ...mapState([
       'reviewLists',
+      'isLogin',
     ]),
     ...mapState(
       movieTitle,
