@@ -74,8 +74,6 @@ const store = new Vuex.Store({
 
 
 
-
-
     SET_TOKEN:function(state,config){
       state.config = config
     },
@@ -209,6 +207,7 @@ const store = new Vuex.Store({
     selectGenre: function ({commit}, genre) {
       commit('SELECT_GENRE', genre)
     },
+
 
 
     // 게시글 작성시각을 yyyy-mm-dd AM yy:mm 형식으로 변환하여 출력

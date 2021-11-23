@@ -126,6 +126,7 @@ export default {
       }
       this.$emit('sort-release-date', sortby)
     },
+
   },
   computed: {
     ...mapState([
