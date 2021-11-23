@@ -7,19 +7,18 @@
       :controls-prev-html="'&#10092;'" 
       :controls-next-html="'&#10093;'" 
       :height="485" :width="340"
-      :clickable="false">
+      :clickable="false"
       
+      >
         <slide 
         v-for="(slide, i) in slides" 
         :index="i"
         :key="i"
-        class="border border-dark"
+        id="shadow"
+        class="border border-dark rounded rounded-3"
         >
-        
           <figure v-if="topTenPosterPath[i]">
-            <v-card elevation="12">
-            <img :src="`https://image.tmdb.org/t/p/original/${topTenPosterPath[i]}`">
-        </v-card>
+              <img :src="`https://image.tmdb.org/t/p/original/${topTenPosterPath[i]}`" >
           </figure>
         </slide>
       </carousel-3d>
@@ -87,4 +86,7 @@ export default {
 
 
 <style>
+#shadow{
+  box-shadow: 0px 0px 40px 15px black;
+}
 </style>

@@ -12,7 +12,7 @@
           >
             <button 
             v-show="Detail"
-            class="card bg-dark" 
+            class="search-this-movie card bg-dark" 
             style="border-box; width: 13rem; height: 310px; opacity: 0.7;"
             data-bs-toggle="modal" :data-bs-target="`#exampleModal-${movieCard.id}`"
             @click="[getVideo(), getShortMent(), getStarAvg(), getLikeState()]">
@@ -26,20 +26,23 @@
         </div>
       </div>
 
+  
 
 
     <!-- modal -->
     <!-- header -->
-    <div class="modal fade" :id="`exampleModal-${movieCard.id}`" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content container bg-dark" style="width:1000px; height:900px;">
+    <div class="modal fade" :id="`exampleModal-${movieCard.id}`" tabindex="-1" aria-labelledby="exampleModalLabel" 
+    aria-hidden="true">
+      <div class="modal-dialog modal-fullscreen" >
+        <div class="modal-content container bg-dark" style="width:1200px; height:890px;">
           <div class="modal-header">
             <h3 class="modal-title fw-bold text-white" id="exampleModalLabel">영화 상세정보</h3>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
           <!-- body -->
-          <div class="modal-body container background-image">
+          <div class="backdrop-box modal-body container" 
+          :style="`background-image: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url(${backdropUrl}); background-size: 1200px;`">
             <div class="d-flex justify-content-between">
               <div class="d-flex">
                 <h3 class="text-start mt-1">{{ movieCard.title }}</h3>
@@ -55,34 +58,32 @@
                 </div>
               </div>
               <div class="mx-4 d-flex">
-                <div class="fs-2 mx-1">{{ averageRank }}</div><div style="color: grey;" class="mt-4"> / 5</div>
-                <v-icon x-large style="color: goldenrod;">mdi-star</v-icon>
+                <div class="fs-1 mx-1">{{ averageRank }}</div><div style="color: grey;" class="mt-4"> / 5</div>
+                <v-icon x-large style="color: goldenrod; ">mdi-star</v-icon>
 
               </div>
             </div>
             <header class="text-start d-flex justify-content-between align-items-center">
-              <div>
-                <span>popularity {{ movieCard.popularity}}</span>
-                <span class="mx-3">{{ movieCard.release_date}} 개봉 </span>
+              <div class="mb-5">
+                <span>인기도 {{ movieCard.popularity}}</span>
+                <span class="mx-3">개봉일 {{ movieCard.release_date}} </span>
               </div>
             </header>
-            <br>
-            <div class="d-flex flex-column justify-content-center">
-              <iframe id="ytplayer" type="text/html" width="720" height="360" :src="videoUrl" frameborder="0"></iframe>
-              <h4 class="text-start mt-4">줄거리</h4>
+            <div class="d-flex flex-column justify-content-center align-items-center">
+              <iframe id="ytplayer" type="text/html" width="850" height="430" :src="videoUrl" frameborder="0" class="rounded rounded-3"></iframe>
               <hr>
-              <div class="fs-6 mb-5 text-start" style="width:900px;">{{movieCard.overview}}</div>
+              <div class="fs-6 mb-5 text-center lh-lg" style="width:850px;">{{movieCard.overview}}</div>
             </div>
-            <h4 class="text-start mt-4">한줄평</h4>
-            <hr>
-
+            <div class="container" style="width:970px;">
+              <h4 class="text-start mt-4">한줄평</h4>
+              <hr>
+            </div>
             <div 
             v-for="shortment in shortments"
             :key="shortment.id"
-            class="d-flex flex-column container border border-secondary border-1 rounded-3 mb-3"
+            class="d-flex flex-column container border border-secondary border-1 rounded-3 mb-3 bg-dark bg-opacity-50"
             style="width:900px;">
 
-              
               <div class="d-flex justify-content-between">
                 <div class="d-flex">
                   <div class="mx-1">{{ userNameList[shortment.user] || shortment.user}}</div>
@@ -158,7 +159,7 @@
 
 
           <!-- footer -->
-          <div class="modal-footer">
+          <div class="modal-footer" style="height: 120px">
             <div class="d-flex">
 
               <div v-if="isLogin" class="d-flex flex-column align-items-start">
@@ -211,6 +212,7 @@ export default {
   name: 'MovieCard',
   props: {
     movieCard: Object,
+    searchThisMovie: Object,
   },
   data: function () {
     return {
@@ -484,6 +486,12 @@ export default {
         console.log(res)
         this.isLike = res.data.liked
       })
+    },
+
+    searchMovie: function (searchThisMovie) {
+      this.movieCard = searchThisMovie
+      document.querySelector('.search-this-movie').click()
+      this.searchThisMovie = null
     }
   },
 
@@ -504,7 +512,6 @@ export default {
       const backdropPath = this.movieCard['backdrop_path']
       return `https://image.tmdb.org/t/p/original${backdropPath}`
     }
-
   },
 
   created: function() {
@@ -549,6 +556,4 @@ export default {
       background-color:rgb(204, 204, 204);
       -webkit-box-shadow: inset 0 0 1px rgba(90,90,90,0.7);
   }
-
-
 </style>

@@ -75,11 +75,6 @@ const routes = [
     name: 'Login',
     component: Login
   },
-  {
-    path: '/profilebar/myprofile',
-    name: 'MyProfile',
-    component: MyProfile
-  },
 ]
 
 const router = new VueRouter({

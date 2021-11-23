@@ -8,21 +8,25 @@
       @sort-release-date="sortReleaseDate"
       ></the-sort-bar>
 
-      <the-search-bar @search-movie="searchMovie"></the-search-bar>
+      <the-search-bar 
+      :movie-all="movieAll"
+      @search-movie="searchMovie"
+      ></the-search-bar>
+
     </div>
     <div class="home d-flex" style="flex-wrap:wrap;">
-
-
     <transition-group tag="div" name="cell" class="containerr">
       <movie-card
       id="slow"
-      v-for="movieCard in showMovieList"
-      :key="movieCard.title"
+      v-for="(movieCard, i) in showMovieList"
+      :key="i"
       :movieCard="movieCard"
+      ref="searchMovie"
       class="col-lg-2 col-md-3 col-sm-4 my-3 cell"
       >
       </movie-card>
     </transition-group>
+ 
 
 
     </div>
@@ -49,15 +53,12 @@ export default {
       genre: null,
       showMovieList: null,
       movieAll: null,
+      selectMovie: null,
+      searchThisMovie:null,
     }
   },
 
   methods: {
-    searchMovie: function (searchData) {
-      console.log(searchData)
-    },
-
-
     sortGenre: function (genre) {
       if (genre == '장르 전체'){
         this.showMovieList = this.movieAll
@@ -139,6 +140,13 @@ export default {
 
     changeDateFormatDash: function(date) {
       return date.slice(0,4) + '-' + date.slice(4,6) + '-' + date.slice(6,8)
+    },
+
+
+    searchMovie: function(searchThisMovie) {
+      this.searchThisMovie = searchThisMovie
+      this.$refs.searchMovie(searchThisMovie)
+
     }
   },
 
