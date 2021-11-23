@@ -26,7 +26,7 @@
     <v-icon large style="color:silver;" class="mb-3 mx-2">mdi-thumb-up</v-icon>
     <span style="font-size:20px;">영화 추천</span>
     </div>
-
+    <recommend></recommend>
     영화 찜목록 슬라이더
 
     <hr>
@@ -98,12 +98,16 @@
 <script>
 import axios from 'axios'
 import {mapState} from 'vuex'
+import Recommend from './Recommend.vue'
 
 const movieTitle = 'movieTitle'
 const userStore = 'userStore'
 
 export default {
   name: 'MyProfile',
+  components:{
+    Recommend,
+  },
   data:function(){
     return{
     username : this.$route.params.username,
