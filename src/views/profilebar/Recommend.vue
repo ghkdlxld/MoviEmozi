@@ -14,7 +14,7 @@ export default {
   name:'Recommend',
   data:function(){
     return{
-      api_url:'https://openapi.naver.com/v1/vision/face',
+      api_url:'/v1/vision/face',
       Client_ID : 'oTXX6kMwz__NOqLgy4dH',
       Client_Secret : 'L5ot3Ah5zY',
       file : '',
@@ -30,17 +30,21 @@ export default {
     recommend:function(){
       const formData = new FormData()
       formData.append('image', this.file)
-      this.$http.post('https://openapi.naver.com/v1/vision/face',
-      data=formData, headers={
-        "Content-Type":'multipart/form-data',
-        "Access-Control-Allow-Origin" : "*",
-        "Access-Control-Allow-Headers" : "Origin, X-Requested-With, Content-Type, Cookie,Accept,X-PINGOTHER",
-        "Access-Control-Allow-Methods":'GET,POST,OPTIONS',
-        "Access-Control-Allow-Credentials":true,
-        "X-Naver-Client-Id": this.Client_ID,
-        "X-Naver-Client-Secret": this.Client_Secret,
-
-      }).then(res=>{
+      axios({
+        method: 'post',
+        url: this.api_url,
+        headers: {
+          "Content-Type":'multipart/form-data',
+          "Access-Control-Allow-Origin" : "*",
+          "Access-Control-Allow-Headers" : "Origin, X-Requested-With, Content-Type, Cookie,Accept,X-PINGOTHER",
+          "Access-Control-Allow-Methods":'GET,POST,OPTIONS',
+          "Access-Control-Allow-Credentials":true,
+          "X-Naver-Client-Id": this.Client_ID,
+          "X-Naver-Client-Secret": this.Client_Secret,
+        },
+        data: formData
+      })
+      .then(res=>{
         console.log(res)
       })
 
