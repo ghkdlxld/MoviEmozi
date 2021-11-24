@@ -193,27 +193,6 @@ export default {
     },
 
 
-    // react eventHandler part
-    // foo = (e) => {
-    // const formData = new FormData();
-    // formData.append('file', e.target.files[0]);
-    
-    // this.props.bar(formData);
-    // } 
-
-  // Redux action part. Axios sends image to backend
-  //   export const bar = (image) => {
-
-  //   return dispatch => {
-  //     return axios.post('/image/', image)
-  //       .then(res => {
-  //         dispatch(bar_(res.data));
-  //     })
-  //   }
-  // },
-
-
-
 
 
   
