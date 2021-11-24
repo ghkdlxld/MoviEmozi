@@ -85,11 +85,11 @@ export default {
   methods:{
     
 
-    // onInputImage(){
-    //   var image = this.$refs['Image'].files[0]
-    //   const url = URL.createObjectURL(image)
-    //   this.user.image = url
-    // },
+    onInputImage(){
+      var image = this.$refs['Image'].files[0]
+      const url = URL.createObjectURL(image)
+      this.user.image = url
+    },
     validate () {
       if(this.$refs.form.validate()){
         this.signup()

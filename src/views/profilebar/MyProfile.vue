@@ -6,7 +6,8 @@
   </v-btn>
       <v-col align="center">
       <!-- <input type="file" @change="onInputImage()" ref="Image" class="image"> -->
-      <v-file-input v-model="files" @change="sendImage()" name="files" label="Profile Image"></v-file-input>
+      <button style="color: white;" @click="sendImage()">+++</button>
+      <v-file-input v-model="files" name="files" label="Profile Image"></v-file-input>
 
       </v-col>
     <h1>{{username}}  
@@ -26,7 +27,7 @@
     <v-icon large style="color:silver;" class="mb-3 mx-2">mdi-thumb-up</v-icon>
     <span style="font-size:20px;">영화 추천</span>
     </div>
-
+    <recommend></recommend>
     영화 찜목록 슬라이더
 
     <hr>
@@ -98,12 +99,16 @@
 <script>
 import axios from 'axios'
 import {mapState} from 'vuex'
+import Recommend from './Recommend.vue'
 
 const movieTitle = 'movieTitle'
 const userStore = 'userStore'
 
 export default {
   name: 'MyProfile',
+  components:{
+    Recommend,
+  },
   data:function(){
     return{
     username : this.$route.params.username,
@@ -162,28 +167,56 @@ export default {
     moveReview:function(id){
       this.$router.push({name:'ReviewDetail', params: {reviewId:id}})
     },
-    // sendImage(){
-    //   let info = new FormData()
-    //   info.append('files',this.files)
-    //   if (this.files === ''){
-    //     info.append('files',[])
-    //   } else {
-    //     for (let i=0; i < this.files.length; i++){
-    //       info.append('files',this.files[i])
-    //     }
-    //   }
-    //   console.log(info)
-    //   const token = localStorage.getItem('jwt')
-    //   axios({
-    //     method:'post',
-    //     url:`http://127.0.0.1:8000/accounts/upload/`,
-    //     data : info,
-    //     headers:{'Content-Type': 'multipart/form-data','Authorization' : `JWT ${token}`}
-    //   })
-    //   .then(res=>{
-    //     console.log(res)
-    //   })
-    // },
+    
+    sendImage(){
+      let info = new FormData()
+      info.append('files',this.files)
+      if (this.files === ''){
+        info.append('files',[])
+      } else {
+        for (let i=0; i < this.files.length; i++){
+          info.append('files',this.files[i])
+        }
+      }
+      console.log(info)
+      const token = localStorage.getItem('jwt')
+      axios({
+        method:'post',
+        url:`http://127.0.0.1:8000/accounts/upload/`,
+        data : info,
+        headers:{'Content-Type': 'multipart/form-data','Authorization' : `JWT ${token}`}
+      })
+      .then(res=>{
+        console.log('아무거나')
+        console.log(res)
+      })
+    },
+
+
+    // react eventHandler part
+    // foo = (e) => {
+    // const formData = new FormData();
+    // formData.append('file', e.target.files[0]);
+    
+    // this.props.bar(formData);
+    // } 
+
+  // Redux action part. Axios sends image to backend
+  //   export const bar = (image) => {
+
+  //   return dispatch => {
+  //     return axios.post('/image/', image)
+  //       .then(res => {
+  //         dispatch(bar_(res.data));
+  //     })
+  //   }
+  // },
+
+
+
+
+
+  
     import_review_comment:function(){
       axios({
         method:'get',

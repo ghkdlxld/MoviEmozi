@@ -2,6 +2,7 @@
   "name": "final-pjt-front",
   "version": "0.1.0",
   "private": true,
+  "proxy" : "https://openapi.naver.com",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -20,6 +21,7 @@
     "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
+    "@types/request": "^2.48.7",
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
