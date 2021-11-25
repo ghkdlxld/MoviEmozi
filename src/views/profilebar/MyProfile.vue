@@ -160,6 +160,7 @@
             class="container">
               <p>[{{review_comment.review}}] - {{review_comment.content}}</p>
               <p style="font-size:13px;">마지막 수정 : {{review_comment.updated_at | betweenDate}}</p>
+            <hr>
             </div>
           </div>
 
