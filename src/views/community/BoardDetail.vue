@@ -103,7 +103,7 @@ export default {
     )
   },
   methods:{
-    movetomy:function(name){
+    moveTomy:function(name){
       this.$router.push({name:'MyProfile',params:{username:name}})
     },
     Delete:function(){
