@@ -14,13 +14,13 @@
             v-show="Detail"
             id="search-this-movie"
             class="card bg-dark" 
-            style="border-box; width: 13rem; height: 310px; opacity: 0.7;"
+            style="border-box; width: 13rem; height: 310px; opacity: 0.75;"
             data-bs-toggle="modal" :data-bs-target="`#exampleModal-${movieCard.id}`"
             @click="[getVideo(), getShortMent(), getStarAvg(), getLikeState()]">
               <div class="container" style="width: 13rem; height: 310px; ">
-                <div class="card-title fw-bold mt-3" style="color: gold;">{{movieCard.title}}</div>
-                <div class="card-text">{{genreNoArray}}</div>
-                <div class="card-text">{{movieCard.popularity}} | {{movieCard.runtime}} 분</div>
+                <div class="card-title mt-3 detailfont" style="color: violet; font-size: large; font-weight: bold;">{{movieCard.title}}</div>
+                <div class="card-text detailfont">{{genreNoArray}}</div>
+                <div class="card-text detailfont">{{movieCard.popularity}} <v-icon class="mx-1 mb-1" small style="color: silver;">mdi-clock-time-three-outline</v-icon>{{movieCard.runtime}}</div>
               </div>
             </button>
           </div>
@@ -550,5 +550,9 @@ export default {
       border-radius: 10px;
       background-color:rgb(204, 204, 204);
       -webkit-box-shadow: inset 0 0 1px rgba(90,90,90,0.7);
+  }
+
+  .detailfont {
+    font-family: 'Hahmlet', serif;
   }
 </style>

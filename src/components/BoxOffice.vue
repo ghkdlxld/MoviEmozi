@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1 class="text-white">Boxoffice Top 10</h1>
-    <div >
+    <h1 class="p text-white">Box office</h1>
+    <div class="carouselm">
       <carousel-3d  
       :controls-visible="true" 
       :controls-prev-html="'&#10092;'" 
@@ -87,6 +87,18 @@ export default {
 
 <style>
 #shadow{
-  box-shadow: 0px 0px 40px 15px black;
+  box-shadow: 0px 0px 40px 15px rgb(30, 20, 61);
+}
+
+.p {
+    /* font-family: 'Aleo', serif; */
+    font-family: 'Hahmlet', serif;
+    font-size: 70px;
+    font-weight: 500;
+    margin: 70px 25px 60px 25px;
+  }
+
+.carouselm {
+  margin-bottom: 80px;
 }
 </style>

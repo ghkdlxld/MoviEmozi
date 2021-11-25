@@ -10,7 +10,7 @@
 
       <v-row v-if="username === LoginUser" style="margin-top:10px;">
       <v-col cols="6" align="right">
-      <v-file-input v-model="files" name="files" style="width:200px; height:30px; padding-top:0px;" label="profile image"></v-file-input>
+      <v-file-input v-model="files" name="files" class="rounded rounded-3 opacity-75" style="width:200px; height:30px; padding-top:0px;" label="profile image"></v-file-input>
       </v-col>
       <v-col cols="2" align="right">
        <v-btn outlined style="color: silver;" @click="sendImage()">Select</v-btn> 
@@ -21,7 +21,7 @@
 
 
       </v-row>
-    <h1>{{username}}  
+    <h1 class="my-5">{{username}}  
       <v-btn outlined @click="follow" v-if="username !== LoginUser"><v-icon large style="color: silver;" >{{follow_btn}}</v-icon></v-btn>
       </h1>
     <v-row>
@@ -54,9 +54,11 @@
 
         <v-menu top :offset-x="offset"> 
           <template v-slot:activator="{on, attrs}">
-        <v-btn outlined style="color:silver" v-bind="attrs" v-on="on"><v-icon style="color: silver;">mdi-account-details-outline</v-icon>Followers</v-btn>
+        <v-btn outlined style="color:silver" v-bind="attrs" v-on="on">
+          <v-icon style="color: silver;">mdi-account-details-outline</v-icon>Followers</v-btn>
           </template>
       <v-list>
+
         <div v-if="follower_name.length !== 0">
         <v-list-item v-for="(person,i) in follower_name" :key="i" style="border-bottom: 1px solid black;">
          <v-btn text style="color:white;"><span @click="moveTomy(person)">{{person}} </span></v-btn>
@@ -75,34 +77,38 @@
       </v-col>
     </v-row>
     <hr>
+    <div class="container contentbox">
     <div align="left">
     <v-icon large style="color: silver;" class="mb-3 mx-2">mdi-bookmark-multiple </v-icon> 
     <span style="font-size:20px;">찜한 영화 </span>
     </div>
     <div v-if="like_movie.length !== 0">
-  <v-carousel cycle height="400" hide-delimiter-background show-arrows-on-hover>
-    <v-carousel-item  v-for="movie in like_movie" :key="movie.id">
-    <recom-list :recom="movie">
-    </recom-list>
+      <v-carousel cycle height="400" hide-delimiter-background show-arrows-on-hover>
+        <v-carousel-item  v-for="movie in like_movie" :key="movie.id" class="rounded rounded-3">
+        <recom-list :recom="movie">
+        </recom-list>
+        </v-carousel-item>
+      </v-carousel>
+    </div>
 
-    </v-carousel-item>
-  </v-carousel>
-  </div>
+
   <div v-else>
     <h4 style="margin-bottom:30px;">아직 찜한 영화가 없습니다.</h4>
   </div>
-
+  </div>
     <hr>
 
-    <div align="left">
-    <v-icon large style="color:silver;" class="mb-3 mx-2">mdi-thumb-up</v-icon>
-    <span style="font-size:20px;">영화 추천</span>
+    <div class="container contentbox">
+      <div align="left">
+      <v-icon large style="color:silver;" class="mb-3 mx-2">mdi-thumb-up</v-icon>
+      <span style="font-size:20px;">영화 추천</span>
+      </div>
+      <recommend ></recommend>
     </div>
-    <recommend></recommend>
 
     <hr>
 
-    <v-container>
+    <v-container >
       <v-row>
         <v-col cols="6" style="text-align:left; border-right:1px solid white;">
         <div align="left">
@@ -131,6 +137,7 @@
           <div v-if="!review && !board">
             <p>아직 작성한 글이 없습니다.</p>
           </div>
+
         </v-col>
 
         <v-col cols="6" style="text-align:left; padding-left:20px;">
@@ -229,22 +236,6 @@ export default {
   }
   ,
   methods:{
-    // change(){
-    //   var files = this.files.files
-    //   for (var i =0; i <files.length;i++){
-    //     var file = files[i]
-    //     var img = document.getElementById("preview")
-    //     img.file = file
-    //     var reader = new FileReader()
-    //     reader.onload = (function(aImg){
-    //       return function(event){
-    //         aImg.src = event.target.result
-    //       }
-    //     })(img)
-    //     reader.readAsDataURL(file)
-    //   }
-    //   // this.preview = URL.createObjectURL(this.files[0])
-    // },
     moveTomy:function(name){
       this.$router.push({name:'MyProfile',params:{username:name}})
     },
@@ -446,12 +437,17 @@ export default {
   margin-bottom: 10px;
   padding-top: 5px;
   padding-right: 10px;
-  background-color: rgba(117, 116, 204, 0.7);
+  background-color: rgb(121, 59, 161);
   width:310px;
   height: 45px;
 }
 
 .v-input__prepend-outer{
   height: 10px;
+}
+
+.contentbox{
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.05);
 }
 </style>
