@@ -33,7 +33,7 @@
                 <td>{{movieTitle['movieTitle'][(review.movie_id-1)]}}</td>
                 <!-- {{ImportComment(review.id)}} -->
                 <td>{{ review.title }} &nbsp; </td>
-                <td>{{userNameList[review.user-1]}}</td>
+                <td>{{userNameList[review.user]}}</td>
                 <td>{{review.updated_at |dateFormat}}</td>
               </tr>
             </tbody>

@@ -5,7 +5,7 @@
     <hr>
     <v-row>
       <v-col cols="auto">
-      <v-btn tile outlined dark @click="chatsCreate">Create</v-btn>
+      <v-btn tile outlined style="color:silver;" @click="chatsCreate">Create</v-btn>
       </v-col>
     </v-row>
     <hr style="color:white;">
@@ -24,6 +24,11 @@
         id="select"
       ></v-select>
       </v-col>
+      <v-col align="left">
+        <v-btn outlined style="color:silver; margin-top:12px;" @click="followFilter">
+          {{Fbtn}}
+        </v-btn>
+      </v-col>
     </v-row>
     <div v-if="boardLists">
     <board-list-item
@@ -37,6 +42,9 @@
 <script>
 import BoardListItem from './BoardListItem.vue'
 import {mapState} from 'vuex'
+import axios from 'axios'
+
+const userStore = 'userStore'
 
 export default {
   name: 'BoardList',
@@ -49,9 +57,14 @@ export default {
       {value:'3',name:'영화 추천'},{value:'4',name:'파티 모집'}],
       select : '0',
       cnt_list : [],
+      following: false,
+      following_list : null,
     }
   },
   methods:{
+    followFilter:function(){
+      this.following = !this.following
+    },
     chatsCreate:function(){
       if (this.isLogin){
       this.$router.push({name:"BoardCreate", query:{category:'chat'}})
@@ -63,11 +76,18 @@ export default {
   },
 
   computed:{
+    Fbtn:function(){
+      return this.following ? 'Filter Clear' : 'Following Filter'
+    },
     ...mapState([
       'boardLists',
       'userNameList',
       'isLogin',
     ]),
+    ...mapState(
+      userStore,
+      ['LoginUser',]
+    ),
     filtering:function(){
       const questions = []
       if (this.boardLists){
@@ -80,18 +100,33 @@ export default {
       return questions
     },
     CategoryFilter(){
-      var filter = []
+      var filt = []
+      if (this.following && this.following_list !== []){
+        filt = this.filtering.filter(board=>{
+          return this.following_list.includes(board.user)
+        })
+      }else{
       this.filtering.forEach(board=>{
         if (board['board_num'] === this.select ){
-          filter.push(board)
+          filt.push(board)
         } else if (this.select === '0'){
-          filter = this.filtering
+          filt = this.filtering
           return
         }
-      })
-      return filter
+      })}
+      return filt
     },
   },
+  created:function(){
+    axios({
+        method:'get',
+        url:`http://127.0.0.1:8000/accounts/${this.LoginUser}/`,
+        headers: this.$store.state.config
+      })
+      .then(res=>{
+        this.following_list = res.data[0].followings
+      })
+  }
 }
 </script>
 

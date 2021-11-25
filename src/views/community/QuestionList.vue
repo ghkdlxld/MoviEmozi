@@ -4,7 +4,7 @@
     <hr>
     <v-row>
       <v-col cols="auto">
-      <v-btn tile outlined dark @click="chatsCreate">Create</v-btn>
+      <v-btn tile outlined style="color:silver;" @click="chatsCreate">Create</v-btn>
       </v-col>
     </v-row>
     <board-list-item
@@ -17,6 +17,7 @@
 <script>
 import BoardListItem from './BoardListItem.vue'
 import {mapState} from 'vuex'
+
 
 export default {
   name: 'Question',
@@ -47,7 +48,7 @@ export default {
         }
       })}
       return questions
-    }
+    },
   },
 
 }

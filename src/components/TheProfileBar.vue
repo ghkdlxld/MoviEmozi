@@ -5,7 +5,7 @@
         My Profile
       </a>
       
-      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" >
         <li v-if="!isLogin"><router-link :to="{ name: 'Signup'}" class="dropdown-item" >Signup</router-link></li>
         <li v-if="!isLogin"><router-link :to="{ name: 'Login'}" class="dropdown-item">Login</router-link></li>
 
@@ -34,7 +34,7 @@ export default {
     logout:function(){
       this.$emit('logout')
       this.$store.dispatch('userStore/removeLoginUser')
-      this.$router.push({name:'Login'})
+      this.$router.push({name:'Login',query:{logout:'true'}})
       this.$store.dispatch('Logout')
       this.isLogin = false
     }
@@ -53,4 +53,7 @@ export default {
 
 
 <style>
+.dropdown-menu{
+  background: linear-gradient(to top right,  rgba(117, 116, 204, 0.7), rgba(25,32,72,.7))
+}
 </style>

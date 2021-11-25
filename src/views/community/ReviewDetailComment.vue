@@ -18,14 +18,14 @@
     v-for="(comment,index) in comment_list"
     :key="index"
     >
-        <div v-if="profile[userNameList[comment.user-1]]">
-        <img :src="profile[userNameList[comment.user-1]]" alt="" style="width:70px; height:70px; border-radius:70%; margin-bottom:10px;">
+        <div v-if="profile[userNameList[comment.user]]">
+        <img :src="profile[userNameList[comment.user]]" alt="" style="width:70px; height:70px; border-radius:70%; margin-bottom:10px;">
          </div>
          <div v-else>
           <img :src="require(`@/assets/profile_default.png`)" alt="" style="width:70px; height:70px; border-radius:70%; margin-bottom:10px;">
         </div>
       <p style="text-align:left;">
-        작성자: {{userNameList[comment.user-1]}}
+        작성자: {{userNameList[comment.user]}}
       <span>
       <v-btn fab id="del" @click="DeleteComment(comment.id)" v-show="userNameList[comment.user] === LoginUser">
         <v-icon >mdi-trash-can</v-icon>

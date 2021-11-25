@@ -1,6 +1,6 @@
 <template>
   <div style="color:white;" class="container" data-app>
-    <div v-if="profile.profile[username]">
+    <div v-if="profile.profile[username] !== null">
     <img :src="profile.profile[username]" alt="" style="width:100px; height:100px; border-radius:70%; object-fit:cover;">
     </div>
     <div v-else>
@@ -8,13 +8,18 @@
   <img :src="require(`@/assets/profile_default.png`)" alt="" style="width:100px; border-radius:70%; object-fit:cover;">
     </div>
 
-      <v-row v-if="username === LoginUser">
+      <v-row v-if="username === LoginUser" style="margin-top:10px;">
       <v-col cols="6" align="right">
       <v-file-input v-model="files" name="files" style="width:200px; height:30px; padding-top:0px;" label="profile image"></v-file-input>
       </v-col>
-      <v-col cols="6" align="left">
+      <v-col cols="2" align="right">
        <v-btn outlined style="color: silver;" @click="sendImage()">Select</v-btn> 
       </v-col>
+      <v-col cols="4" align="left">
+      <v-btn outlined style="color:silver;" @click="clear"><v-icon>mdi-cached</v-icon>Clear</v-btn>
+      </v-col>
+
+
       </v-row>
     <h1>{{username}}  
       <v-btn outlined @click="follow" v-if="username !== LoginUser"><v-icon large style="color: silver;" >{{follow_btn}}</v-icon></v-btn>
@@ -282,6 +287,10 @@ export default {
 
 
       })
+    },
+    clear:function(){
+      this.$store.dispatch('profile/profile',[null,this.username])
+      window.location.reload()
     },
     follow:function(){
       axios({

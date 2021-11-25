@@ -4,7 +4,12 @@
     <hr>
     <v-row>
       <v-col cols="auto">
-      <v-btn tile outlined dark @click="reviewCreate">Create</v-btn>
+      <v-btn tile outlined style="color:silver;" @click="reviewCreate">Create</v-btn>
+      </v-col>
+      <v-col align="left" v-if="LoginUser">
+        <v-btn outlined style="color:silver;" @click="followFilter">
+          {{Fbtn}}
+        </v-btn>
       </v-col>
     </v-row>
     <hr style="color:white;">
@@ -50,7 +55,11 @@
 import ReviewListItem from './ReviewListItem.vue'
 import {mapState} from 'vuex'
 import _ from 'lodash'
+import axios from 'axios'
+
 const movieTitle = 'movieTitle'
+const userStore = 'userStore'
+
 export default {
   name:'ReviewList',
   components:{
@@ -62,9 +71,14 @@ export default {
       items : null,
       keyword : null,
       isDisable : false,
+      following: false,
+      following_list : null,
     }
   },
   methods:{
+    followFilter:function(){
+      this.following = !this.following
+    },
     reviewCreate:function(){
       if (this.isLogin){
       this.$router.push({name:'ReviewCreate'})
@@ -92,6 +106,9 @@ export default {
     }
   },
   computed:{
+    Fbtn:function(){
+      return this.following ? 'Filter Clear' : 'Following Filter'
+    },
     ...mapState([
       'reviewLists',
       'isLogin',
@@ -100,8 +117,16 @@ export default {
       movieTitle,
       ['movieTitle',]
     ),
+    ...mapState(
+      userStore,
+      ['LoginUser',]
+    ),
     movieFilter(){
       var filter = []
+      if (this.following && this.following_list !== []){
+        filter = this.reviewLists.filter(board=>{
+        return this.following_list.includes(board.user)})
+      } else {
       this.reviewLists.forEach(review=>{
         const movieId = review['movie_id']-1
         if (this.movie_select === this.movieTitle[movieId]){
@@ -110,7 +135,7 @@ export default {
           filter = this.reviewLists
           return
         }
-      })
+      })}
       return filter
     },
   },
@@ -118,7 +143,14 @@ export default {
   created: function(){
     this.items = _.cloneDeep(this.movieTitle)
     this.items.splice(0,0,'all')
-    
+    axios({
+        method:'get',
+        url:`http://127.0.0.1:8000/accounts/${this.LoginUser}/`,
+        headers: this.$store.state.config
+      })
+      .then(res=>{
+        this.following_list = res.data[0].followings
+      })
   }
 }
 </script>

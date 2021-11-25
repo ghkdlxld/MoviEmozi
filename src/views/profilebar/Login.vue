@@ -50,6 +50,8 @@ export default {
             this.$router.push({name:'ReviewList'})
           } else if (this.$route.query.category === 'question'){
             this.$router.push({name:'QuestionList'})
+          } else if (this.$route.query.logout === 'true'){
+            history.go(-2)
           }
           else{
           history.back();
