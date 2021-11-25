@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="dropdown">
-      <a class="btn btn-line pt-0 dropdown-toggle detailfont" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+      <a class="btn btn-line pt-0 dropdown-toggle detailfont fs-4" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
         My Profile
       </a>
       

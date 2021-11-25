@@ -1,14 +1,14 @@
 <template>
   <div id="app">
     <v-card class="overflow-hidden">
-      <v-app-bar color="#43a047" style="height:100px; padding-bottom:30px;"
+      <v-app-bar color="#43a047" style="height:100px;"
       :style="{'background-image': 'url(' + require('@/assets/background_img.jpg') +')'}" fade-img-on-scroll shrink-on-scroll
       scroll-target="#scrolling">
       <template v-slot:img="{props}">
         <v-img v-bind="props" gradient="to top right,   rgba(25,32,72,.7), rgba(117, 116, 204, 0.5)">
         </v-img>
       </template>
-    <div id="nav" class="d-flex">
+    <div id="nav" class="d-flex" >
      <div style="width:200px; padding-left:20px; white-space:no-wrap;" class="detailfont"><router-link :to="{ name: 'Home'}">
        <div class="titlesize">MoviEmozi</div></router-link></div>
     
@@ -96,10 +96,6 @@ export default {
   color: #2c3e50;
 }
 #img_bar {border:none;}
-
-#nav {
-  padding: 30px;
-}
 
 #nav a {
   font-weight: bold;
