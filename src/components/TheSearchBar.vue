@@ -18,7 +18,7 @@
       <div class="container-fluid">
         <div class="offcanvas offcanvas-end bg-dark" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
           <div class="offcanvas-header">
-            <h5 class="offcanvas-title text-light" id="offcanvasNavbarLabel">Search Movie</h5>
+            <h5 class="offcanvas-title text-light detailfont" id="offcanvasNavbarLabel">Search Movie</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
           </div>
           <div class="offcanvas-body">
@@ -37,7 +37,7 @@
                   >
                     <div 
                     class="d-flex flex-column align-items-center p-3 rounded rounded-3">
-                      <div class="my-2 fw-bold fs-5">{{movie}}</div>
+                      <div class="my-2 fw-bold fs-5 detailfont">{{movie}}</div>
                       <button type="button" class="btn" data-bs-toggle="modal" :data-bs-target="`#exampleModal-${index}`"
                       @click="[searchMovie(movie), getVideo(), getShortMent(), getStarAvg(), getLikeState()]">
                         <img  

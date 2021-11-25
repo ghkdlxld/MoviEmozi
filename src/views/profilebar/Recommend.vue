@@ -1,14 +1,16 @@
 <template>
   <div>
     <div align="left">
-    <v-file-input v-model="files" name="files" label="mood Image" @change="select()"></v-file-input>
+    <v-file-input v-model="files" name="files" label="mood Image" @change="select()" class="rounded rounded-3 opacity-75"></v-file-input>
     <div v-if="isfileNull" id="null">이미지를 선택해주세요!!</div>
     <div v-else style="font-size:13px; margin-bottom:5px;"> ※ 얼굴 사진을 업로드하시면 현재 기분에 맞는 영화를 추천해드립니다!</div>
     <v-btn outlined style="color: silver;" @click="recommend()">Select</v-btn>
     </div>
     <div v-if="face">
-    {{face.emotion.confidence}} % 확률로 [{{emotion[face.emotion.value]}}] 상태입니다.
-    그런 당신을 위한 추천 영화는  
+    {{face.emotion.confidence.toFixed(2)}} % 확률로 [{{emotion[face.emotion.value]}}] 상태입니다<div>
+      <div>그런 당신을 위해 아래의 영화를 추천해드립니다!</div>
+    </div>
+    
     
     <div class="container" style="color:white; height:420px; margin-top:10px;">
       <v-btn outlined style="color:silver; margin-bottom:10px;" @click="play"><v-icon large style="color:silver;">{{playIcon}}</v-icon>자동 재생</v-btn>
@@ -151,7 +153,7 @@ export default {
   margin-bottom: 10px;
   padding-top: 5px;
   padding-right: 10px;
-  background-color: rgb(135, 161, 89);
+  background-color: rgb(121, 59, 161);
   width:230px;
   height: 45px;
 }

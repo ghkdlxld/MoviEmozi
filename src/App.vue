@@ -2,28 +2,29 @@
   <div id="app">
     <v-card class="overflow-hidden">
       <v-app-bar color="#43a047" style="height:100px; padding-bottom:30px;"
-      :src="require(`@/assets/bar.jpg`)" fade-img-on-scroll shrink-on-scroll
+      :style="{'background-image': 'url(' + require('@/assets/background_img.jpg') +')'}" fade-img-on-scroll shrink-on-scroll
       scroll-target="#scrolling">
       <template v-slot:img="{props}">
         <v-img v-bind="props" gradient="to top right,  rgba(117, 116, 204, 0.7), rgba(25,32,72,.7)">
         </v-img>
       </template>
     <div id="nav" class="d-flex">
-     <v-app-bar-title style="width:300px; padding-left:20px; white-space:no-wrap;"><router-link :to="{ name: 'Home'}">MoviEmozi</router-link></v-app-bar-title> 
+     <div style="width:200px; padding-left:20px; white-space:no-wrap;" class="detailfont"><router-link :to="{ name: 'Home'}">
+       <div class="titlesize">MoviEmozi</div></router-link></div>
     
        <v-spacer></v-spacer>
       <div style="display:flex;">
         <!-- <router-link :to="{ name: 'cardGame'}" class="mx-2">Movie Recommend</router-link> | -->
         <!-- Community => 자유, Review, 건의 -->
-        <router-link :to="{ name: 'Community'}" class="mx-2">Community</router-link>  |
-        <router-link :to="{ name: 'QuestionList' }" class="mx-2">1:1 문의</router-link>  |
-        <router-link :to="{ name: 'cardGame' }" class="mx-2">영화 추천</router-link>
+        <router-link :to="{ name: 'Community'}" class="mx-2 detailfont">Community</router-link>  |
+        <router-link :to="{ name: 'QuestionList' }" class="mx-2 detailfont">1:1 문의</router-link>  |
+        <router-link :to="{ name: 'cardGame' }" class="mx-2 detailfont">영화 추천</router-link>
         <!-- profile drop down => profile logout / signup login -->
         <the-profile-bar :isLogin="isLogin"></the-profile-bar>
         </div>
     </div>
       </v-app-bar>
-      <v-sheet id="scrolling" class="overflow-y-auto" style="background-color:black; padding-top:30px;">
+      <v-sheet id="scrolling" class="overflow-y-auto" style="background-color:rgb(19, 19, 19); padding-top:30px;" >
 
         <router-view :key="$route.fullPath" @login="isLogin=true" @logout="isLogin=false"/>
 
@@ -35,7 +36,6 @@
 
 <script>
 import TheProfileBar from '@/components/TheProfileBar'
-
 
 export default {
   name: 'App',
@@ -90,7 +90,6 @@ export default {
 .v-toolbar__content, .v-toolbar__extension{
   display: inline !important;
 }
-
 .wrap {
     width: 100%;
     height: 100%;
@@ -130,5 +129,8 @@ export default {
     bottom:-80px;
     right:-200px;
     background-color: #6658b3;
+  }
+  .titlesize{
+    font-size:25px;
   }
 </style>

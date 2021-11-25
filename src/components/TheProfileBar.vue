@@ -1,16 +1,16 @@
 <template>
   <div>
     <div class="dropdown">
-      <a class="btn btn-line pt-0 dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+      <a class="btn btn-line pt-0 dropdown-toggle detailfont" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
         My Profile
       </a>
       
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" >
-        <li v-if="!isLogin"><router-link :to="{ name: 'Signup'}" class="dropdown-item" >Signup</router-link></li>
-        <li v-if="!isLogin"><router-link :to="{ name: 'Login'}" class="dropdown-item">Login</router-link></li>
+        <li v-if="!isLogin"><router-link :to="{ name: 'Signup'}" class="dropdown-item detailfont" >Signup</router-link></li>
+        <li v-if="!isLogin"><router-link :to="{ name: 'Login'}" class="dropdown-item detailfont">Login</router-link></li>
 
-        <li v-if="isLogin"><router-link :to="{ name: 'MyProfile', params:{username:LoginUser}}" class="dropdown-item" >My Profile</router-link></li>
-        <li v-if="isLogin"><router-link to="." class="dropdown-item" @click.native="logout">Logout</router-link></li>
+        <li v-if="isLogin"><router-link :to="{ name: 'MyProfile', params:{username:LoginUser}}" class="dropdown-item detailfont" >My Profile</router-link></li>
+        <li v-if="isLogin"><router-link to="." class="dropdown-item detailfont" @click.native="logout">Logout</router-link></li>
       </ul>
     </div>
   </div>
@@ -54,6 +54,6 @@ export default {
 
 <style>
 .dropdown-menu{
-  background: linear-gradient(to top right,  rgba(117, 116, 204, 0.7), rgba(25,32,72,.7))
+  background: linear-gradient(to top right,  rgba(101, 100, 184, 0.7), rgba(19, 24, 47, 0.7) 80%)
 }
 </style>

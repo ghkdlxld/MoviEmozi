@@ -34,12 +34,11 @@
       <img class="gamecard" id="something0" :src="imageUrl[9]"></button>
   </ul>
   <div>
-    <button class="stack btn btn-outline-warning mx-5"
+    <button class="stack btn btn-outline-light mx-5"
     @click="[stack(), shuffleCard()]">영화 다시뽑기</button>
-    <button class="spread btn btn-outline-success"
+    <button class="spread btn btn-outline-light"
     @click="spread()">펼쳐 보기</button>
   </div>
-  
 </div>
 </template>
 
@@ -149,18 +148,10 @@ export default {
 </script>
 
 <style>
-.container {
-  position: relative;
-  margin: 10px 0 20px 0;
-  -webkit-perspective: 1000;
-  -moz-perspective: 1000;
-  -ms-perspective: 1000;
-  -o-perspective: 1000;
-}
-
 .grid {
   width: 1170px;
   margin: 0 auto;
+  background-color: rgb(19, 19, 19);
 }
 
 .list {
@@ -168,6 +159,7 @@ export default {
   position: relative;
   list-style-type: none;
   padding-left: 0;
+  background-color: rgb(19, 19, 19);
 }
 
 .gamecard {
@@ -180,12 +172,13 @@ export default {
   float: left;
   width: 222px;
   height: 311px;
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(19, 19, 19); 
   position: absolute;
   right: 0;
   bottom: 0;
   margin: 30px 0 15px 15px;
   transition: 2s;
+  border-radius: 30px
 }
 .gamecard:nth-child(5n) {
   margin-right: 0;
@@ -235,5 +228,7 @@ export default {
   transform: rotateY( 180deg )
 }
 
-
+.background {
+  background-color: rgb(19, 19, 19); 
+}
 </style>
