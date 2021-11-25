@@ -34,7 +34,7 @@
                 <td>{{ boardNum[board.board_num] }}</td>
                 
                 <td>{{ board.title }} &nbsp; </td>
-                <td>{{ userNameList[board.user]}}</td>
+                <td>{{ userNameList[board.user-1]}}</td>
                 <td>{{board.updated_at | dateFormat}}</td>
               </tr>
             </tbody>

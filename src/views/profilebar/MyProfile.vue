@@ -1,25 +1,92 @@
 <template>
-  <div style="color:white;" class="container">
-  
-  <v-btn class="my-3">
-  <v-icon large>mdi-account-circle</v-icon>
-  </v-btn>
-      <v-col align="center">
-      <!-- <input type="file" @change="onInputImage()" ref="Image" class="image"> -->
-      <button style="color: white;" @click="sendImage()">+++</button>
-      <v-file-input v-model="files" name="files" label="Profile Image"></v-file-input>
+  <div style="color:white;" class="container" data-app>
+    <div v-if="profile.profile[username]">
+    <img :src="profile.profile[username]" alt="" style="width:100px; height:100px; border-radius:70%; object-fit:cover;">
+    </div>
+    <div v-else>
+  <!-- <v-icon large style="color:silver;">mdi-account-circle</v-icon> -->
+  <img :src="require(`@/assets/profile_default.png`)" alt="" style="width:100px; border-radius:70%; object-fit:cover;">
+    </div>
 
+      <v-row v-if="username === LoginUser">
+      <v-col cols="6" align="right">
+      <v-file-input v-model="files" name="files" style="width:200px; height:30px; padding-top:0px;" label="profile image"></v-file-input>
       </v-col>
+      <v-col cols="6" align="left">
+       <v-btn outlined style="color: silver;" @click="sendImage()">Select</v-btn> 
+      </v-col>
+      </v-row>
     <h1>{{username}}  
-      <v-btn outlined @click="follow"><v-icon large style="color: silver;" >{{follow_btn}}</v-icon></v-btn>
+      <v-btn outlined @click="follow" v-if="username !== LoginUser"><v-icon large style="color: silver;" >{{follow_btn}}</v-icon></v-btn>
       </h1>
+    <v-row>
+      <v-col cols="6">
+        <v-menu top :offset-x="offset"> 
+          <template v-slot:activator="{on, attrs}">
+        <v-btn outlined style="color:silver" v-bind="attrs" v-on="on"><v-icon style="color: silver;">mdi-account-details</v-icon>Followings</v-btn>
+          </template>
+
+      <v-list>
+        <div v-if="following_name.length !== 0">
+        <v-list-item v-for="(person,i) in following_name" :key="i" >
+          <div style="border-bottom-color:white;">
+          {{person}}
+
+          </div>
+        
+        </v-list-item>
+          </div>
+        <div v-else>
+          <v-list-item>
+            <p>팔로잉 목록이 없습니다.</p>
+          </v-list-item>
+        </div>
+      </v-list>
+        </v-menu>
+      
+      </v-col>
+      <v-col cols="6">
+
+        <v-menu top :offset-x="offset"> 
+          <template v-slot:activator="{on, attrs}">
+        <v-btn outlined style="color:silver" v-bind="attrs" v-on="on"><v-icon style="color: silver;">mdi-account-details-outline</v-icon>Followers</v-btn>
+          </template>
+      <v-list>
+        <div v-if="follower_name.length !== 0">
+        <v-list-item v-for="(person,i) in follower_name" :key="i" style="border-bottom: 1px solid black;">
+          {{person}}
+         
+        </v-list-item>
+          </div>
+        <div v-else>
+          <v-list-item>
+            <p>팔로워 목록이 없습니다.</p>
+          </v-list-item>
+        </div>
+      </v-list>
+        </v-menu>
+
+
+      
+      </v-col>
+    </v-row>
     <hr>
     <div align="left">
     <v-icon large style="color: silver;" class="mb-3 mx-2">mdi-bookmark-multiple </v-icon> 
     <span style="font-size:20px;">찜한 영화 </span>
     </div>
+    <div v-if="like_movie.length !== 0">
+  <v-carousel cycle height="400" hide-delimiter-background show-arrows-on-hover>
+    <v-carousel-item  v-for="movie in like_movie" :key="movie.id">
+    <recom-list :recom="movie">
+    </recom-list>
 
-    영화이름 슬라이더 
+    </v-carousel-item>
+  </v-carousel>
+  </div>
+  <div v-else>
+    <h4 style="margin-bottom:30px;">아직 찜한 영화가 없습니다.</h4>
+  </div>
 
     <hr>
 
@@ -28,7 +95,6 @@
     <span style="font-size:20px;">영화 추천</span>
     </div>
     <recommend></recommend>
-    영화 찜목록 슬라이더
 
     <hr>
 
@@ -86,7 +152,7 @@
             </div>
           </div>
 
-          <div v-if="!chat_comments && !review_comments">
+          <div v-if="chat_comments.length === 0 && review_comments.length === 0">
             <p>아직 작성한 댓글이 없습니다.</p>
           </div>
         </v-col>
@@ -100,14 +166,17 @@
 import axios from 'axios'
 import {mapState} from 'vuex'
 import Recommend from './Recommend.vue'
+import RecomList from './RecomList.vue'
 
 const movieTitle = 'movieTitle'
 const userStore = 'userStore'
+const profile = 'profile'
 
 export default {
   name: 'MyProfile',
   components:{
     Recommend,
+    RecomList,
   },
   data:function(){
     return{
@@ -121,6 +190,14 @@ export default {
     isfollowed:null,
     followers : null,
     followings : null,
+    isfileNull : null,
+    follower_name : null,
+    following_name : null,
+    offset : true,
+    like_movie : null,
+
+
+    image : null,   
   }},
   computed:{
     ...mapState(
@@ -130,11 +207,16 @@ export default {
     follow_btn(){
       return this.isfollowed ? 'mdi-account-multiple-check' : 'mdi-account-multiple-plus'
     },
+    ...mapState(
+      profile,
+      ['profile',]
+    ),
     ...mapState([
       'boardLists',
       'reviewLists',
       'boardNum',
       'userId_name',
+      'profile',
     ]),
     ...mapState(
       movieTitle,
@@ -143,6 +225,64 @@ export default {
   }
   ,
   methods:{
+    // change(){
+    //   var files = this.files.files
+    //   for (var i =0; i <files.length;i++){
+    //     var file = files[i]
+    //     var img = document.getElementById("preview")
+    //     img.file = file
+    //     var reader = new FileReader()
+    //     reader.onload = (function(aImg){
+    //       return function(event){
+    //         aImg.src = event.target.result
+    //       }
+    //     })(img)
+    //     reader.readAsDataURL(file)
+    //   }
+    //   // this.preview = URL.createObjectURL(this.files[0])
+    // },
+
+    sendImage(){
+      if (this.files === null){
+        this.isfileNull = true
+      }
+      let info = new FormData()
+      info.append('files',this.files)
+      if (this.files === ''){
+        info.append('files',[])
+      } else {
+        for (let i=0; i < this.files.length; i++){
+          info.append('files',this.files[i])
+        }
+      }
+      const token = localStorage.getItem('jwt')
+      axios({
+        method:'post',
+        url:`http://127.0.0.1:8000/accounts/profile/`,
+        data : info,
+        headers:{'Content-Type': 'multipart/form-data','Authorization' : `JWT ${token}`}
+      })
+      .then(res=>{
+        this.profile_url = res.data.url[0]
+        axios({
+          method:'get',
+          url:`http://127.0.0.1:8000/accounts${this.profile_url}`,
+        })
+        .then(res=>{
+          var url = res.config.url
+          var name = this.username
+          if (!this.profile.profile[this.username]){
+            this.$store.dispatch('profile/profile',[url,name])
+            window.location.reload()
+          } else {
+            this.$store.dispatch('profile/profile',[url,name])
+          }
+          this.files = ''
+        })
+
+
+      })
+    },
     follow:function(){
       axios({
         method:'post',
@@ -151,8 +291,21 @@ export default {
       })
       .then(res=>{
         this.isfollowed = res.data.followed
-        this.followers = res.data.followers
-        this.followings = res.data.followings
+        this.followers = res.data.followers[0]
+        this.followings = res.data.followings[0]
+        this.follower_name = []
+        this.followers.forEach(person=>{
+        this.follower_name.push(person.username)
+          })
+        this.following_name = []
+        this.followings.forEach(person=>{
+          this.following_name.push(person.username)
+        })
+        if (this.follower_name.includes(this.LoginUser)){
+          this.isfollowed = true
+        } else{
+          this.isfollowed = false
+        }
 
       })
       .catch(err=>{
@@ -168,35 +321,9 @@ export default {
       this.$router.push({name:'ReviewDetail', params: {reviewId:id}})
     },
     
-    sendImage(){
-      let info = new FormData()
-      info.append('files',this.files)
-      if (this.files === ''){
-        info.append('files',[])
-      } else {
-        for (let i=0; i < this.files.length; i++){
-          info.append('files',this.files[i])
-        }
-      }
-      console.log(info)
-      const token = localStorage.getItem('jwt')
-      axios({
-        method:'post',
-        url:`http://127.0.0.1:8000/accounts/upload/`,
-        data : info,
-        headers:{'Content-Type': 'multipart/form-data','Authorization' : `JWT ${token}`}
-      })
-      .then(res=>{
-        console.log('아무거나')
-        console.log(res)
-      })
-    },
+    
 
-
-
-
-  
-    import_review_comment:function(){
+  import_review_comment:function(){
       axios({
         method:'get',
         url:`http://127.0.0.1:8000/community/${this.user_info.id}/comment_list_review/`,
@@ -218,6 +345,30 @@ export default {
       this.user_info = res.data[0]
       axios({
         method:'get',
+        url:`http://127.0.0.1:8000/accounts/${this.user_info.id}/follow/`,
+        headers: this.$store.state.config
+      })
+      .then(res=>{
+        this.followers = res.data.followers[0]
+        this.followings = res.data.followings[0]
+        this.follower_name = []
+        this.followers.forEach(person=>{
+        this.follower_name.push(person.username)
+          })
+        this.following_name = []
+        this.followings.forEach(person=>{
+          this.following_name.push(person.username)
+        })
+        if (this.follower_name.includes(this.LoginUser)){
+          this.isfollowed = true
+        } else{
+          this.isfollowed = false
+        }
+
+      })
+
+      axios({
+        method:'get',
         url:`http://127.0.0.1:8000/community/${this.user_info.id}/comment_list_chat/`,
         headers: this.$store.state.config
       })
@@ -227,6 +378,7 @@ export default {
       this.import_review_comment()
       this.$store.dispatch('CreateChatBoard')
       this.$store.dispatch('CreateReviewBoard')
+      setTimeout(()=> function(){
       if (this.boardLists){
       var post = this.boardLists.filter(post=>{
         return post.user === this.user_info.id
@@ -238,8 +390,19 @@ export default {
         return rev.user === this.user_info.id
       })
       this.review = rev
-      }
+      }}
+      , 300)
+
+      axios({
+        method:'get',
+        url:`http://127.0.0.1:8000/movies/${this.username}/like_users/`,
+        headers: this.$store.state.config
+      })
+      .then(res=>{
+        this.like_movie = res.data
+      })
     })
+    
     
 
   },
@@ -268,7 +431,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .v-file-input{
   margin-bottom: 10px;
   padding-top: 5px;
@@ -276,5 +439,9 @@ export default {
   background-color: rgb(135, 161, 89);
   width:310px;
   height: 45px;
+}
+
+.v-input__prepend-outer{
+  height: 10px;
 }
 </style>

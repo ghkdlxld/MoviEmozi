@@ -15,7 +15,7 @@
       </v-btn>
     <hr>
     <div align='left'>
-      <span id="user">작성자 : {{detail.user}} </span>
+      <v-btn text style="color:white;"><span id="user" @click="moveTomy(detail.user)">작성자 : {{detail.user}} </span></v-btn>
       <span id="time" class="my-0">등록시각 : {{created}}</span><br>
       <span id="time">수정시각 : {{updated}}</span>
     </div>
@@ -103,6 +103,9 @@ export default {
     )
   },
   methods:{
+    movetomy:function(name){
+      this.$router.push({name:'MyProfile',params:{username:name}})
+    },
     Delete:function(){
       const chatId = this.chatId
       const num = this.detail.board_num
