@@ -26,7 +26,6 @@
               <div>
                 <div class="d-flex">
                   <input type="text" @input="autoComplete" class="form-control me-2" placeholder="Search" aria-label="Search">
-                  <button class="btn btn-success" type="button">Search</button>
                 </div>
 
                 <div v-show="!isDisable" class="list-group list-group-flush">
@@ -531,6 +530,7 @@ export default {
           })
         }
         this.getStarAvg()
+        this.getShortMent()
       }
     },
 

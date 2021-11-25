@@ -45,7 +45,7 @@ const store = new Vuex.Store({
       state.reviewLists = reviewlst
     },
     CREATE_USER_NAME_LIST:function(state,list){
-      state.userNameList = []
+      state.userNameList = [0, ]
       list.forEach(user=>{
         state.userNameList.push(user.username)
         state.userId_name.push([user.id,user.username])
