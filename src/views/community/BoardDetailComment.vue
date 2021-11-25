@@ -18,8 +18,16 @@
     v-for="(comment,index) in DataList"
     :key="index"
     >
+        <div v-if="profile[userNameList[comment.user-1]]">
+        <img :src="profile[userNameList[comment.user-1]]" alt="" style="width:70px; height:70px; border-radius:70%; margin-bottom:10px;">
+         </div>
+         <div v-else>
+          <img :src="require(`@/assets/profile_default.png`)" alt="" style="width:70px; height:70px; border-radius:70%; margin-bottom:10px;">
+        </div>
+
       <p style="text-align:left;">
-        작성자: {{userNameList[comment.user]}}
+        <v-btn text style="color:white;"><span id="user" @click="moveTomy(userNameList[comment.user-1])">작성자: {{userNameList[comment.user-1]}} </span></v-btn>
+        
       <span>
       <v-btn fab id="del" @click="DeleteComment(comment.id)" v-show="userNameList[comment.user] === LoginUser">
         <v-icon >mdi-trash-can</v-icon>
@@ -64,6 +72,7 @@ import axios from 'axios'
 import {mapState} from 'vuex'
 
 const userStore = 'userStore'
+const profile = 'profile'
 
 export default {
   name:"BoardDetailComment",
@@ -95,6 +104,10 @@ export default {
       userStore,
       ['LoginUser',]
     ),
+    ...mapState(
+      profile,
+      ['profile',]
+    ),
     startOffset(){
       return ((this.curPageNum-1) * this.dataPerPage)
     },
@@ -109,6 +122,9 @@ export default {
     }
   },
   methods:{
+    moveTomy:function(name){
+      this.$router.push({name:'MyProfile',params:{username:name}})
+    },
     updateValue:function(Id,index){
       const update = document.getElementById('editvalue').value
       axios({

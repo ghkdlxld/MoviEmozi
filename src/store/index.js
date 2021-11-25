@@ -6,6 +6,7 @@ import colors from 'vuetify/es5/util/colors'
 import createPersistedState from 'vuex-persistedstate'
 import userStore from '@/store/userStore'
 import movieTitle from '@/store/movieTitle'
+import profile from '@/store/profile'
 
 
 Vue.use(Vuex)
@@ -33,6 +34,8 @@ const store = new Vuex.Store({
     comment_cnt_lst : {},
     userList : null,
     userId_name:[],
+    recom_list : [],
+    
   },
   mutations: {
     CREATE_CHAT_LIST:function(state, chatlst){
@@ -42,6 +45,7 @@ const store = new Vuex.Store({
       state.reviewLists = reviewlst
     },
     CREATE_USER_NAME_LIST:function(state,list){
+      state.userNameList = []
       list.forEach(user=>{
         state.userNameList.push(user.username)
         state.userId_name.push([user.id,user.username])
@@ -55,6 +59,10 @@ const store = new Vuex.Store({
     },
     LOGIN:function(state){
       state.isLogin = true
+    },
+
+    RECOM_MOVIE(state,li){
+      state.recom_list = li
     },
 
 
@@ -86,12 +94,14 @@ const store = new Vuex.Store({
     COMMENT_CNT:function(state,index,cnt){
       state.comment_cnt_lst[index] = cnt
     },
+    
 
 
 
 
   },
   actions: {
+    
     CreateChatBoard:function(context){
       axios({
         method:'get',
@@ -141,6 +151,22 @@ const store = new Vuex.Store({
     },
     Comment_cnt:function({commit},index,cnt){
       commit('COMMENT_CNT',index,cnt)
+    },
+    RecomMovie:function({commit,state},genre){
+      axios({
+        method: 'get',
+        url: 'http://127.0.0.1:8000/movies/',
+        headers: state.config
+      })
+      .then(res=>{
+        var lst = res.data.filter(movie=>{
+          for (let gen of genre){
+            return movie.genres.includes(gen)
+          }
+        })
+      commit('RECOM_MOVIE',lst)
+      }
+      )
     },
 
     
@@ -253,10 +279,11 @@ const store = new Vuex.Store({
   modules: {
     userStore: userStore,
     movieTitle : movieTitle,
+    profile : profile,
   },
   plugins: [
     createPersistedState({
-      paths: ['userStore','movieTitle'],
+      paths: ['userStore','movieTitle','profile',],
     })
   ]
 })

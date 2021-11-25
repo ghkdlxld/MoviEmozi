@@ -1,171 +1,166 @@
 <template>
   <div>
-    <!-- <input type="file" @change="recommend()"> -->
-    <button @click="recommend()">추천</button>
-    <input type="file" @change="onInput()" ref="file" name="file">
+    <div align="left">
+    <v-file-input v-model="files" name="files" label="mood Image" @change="select()"></v-file-input>
+    <div v-if="isfileNull" id="null">이미지를 선택해주세요!!</div>
+    <div v-else style="font-size:13px; margin-bottom:5px;"> ※ 얼굴 사진을 업로드하시면 현재 기분에 맞는 영화를 추천해드립니다!</div>
+    <v-btn outlined style="color: silver;" @click="recommend()">Select</v-btn>
+    </div>
+    <div v-if="face">
+    {{face.emotion.confidence}} % 확률로 [{{emotion[face.emotion.value]}}] 상태입니다.
+    그런 당신을 위한 추천 영화는  
+    
+    <div class="container" style="color:white; height:420px; margin-top:10px;">
+      <v-btn outlined style="color:silver; margin-bottom:10px;" @click="play"><v-icon large style="color:silver;">{{playIcon}}</v-icon>자동 재생</v-btn>
+        <v-carousel 
+        height="370"
+        :cycle = isplay
+        interval="3000"
+        >
+          <v-carousel-item  
+          v-for="recom in recoms"
+          :key="recom.id"
+          reverse-transition="fade-transition"
+          transition="fade-transition"
+          >
+          <recom-list   
+          @stop="play"
+          :recom="recom">
+          </recom-list>
+        </v-carousel-item>
+        </v-carousel>
+      </div>
+    </div>
   </div>
 </template>
 
-<script src="https://unpkg.com/vue-request/dist/vue-request.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 <script>
 import axios from 'axios'
+import {mapState} from 'vuex'
+import RecomList from './RecomList.vue'
+import lodash from 'lodash'
 
 export default {
   name:'Recommend',
+  components:{
+    RecomList,
+  },
   data:function(){
     return{
-      api_url:'/v1/vision/face',
-      Client_ID : 'oTXX6kMwz__NOqLgy4dH',
-      Client_Secret : 'L5ot3Ah5zY',
-      file : '',
+      isplay : false,
+      files : null,
+      isfileNull : false,
+      face : null,
+      recoms : null,
+      emotion : {
+        "angry" : '화남',
+        "disgust": '역겨움,기분 나쁨',
+        "fear" : '근심,두려움',
+        "laugh" : '웃음, 즐거움',
+        "neutral" : '무표정, 별다른 감정 없음',
+        "sad" : '슬픔, 진지함',
+        "surprise":"놀람,당황",
+        "smile" : '미소',
+        "talking" : "말하는 , 표정이 풍부한"
 
-
+      },
+      genre : {
+        "angry" : ['액션','애니메이션','코미디','전쟁','범죄','모험'],
+        "disgust": ['드라마','가족','음악'],
+        "fear" : ['음악','코미디','모험'],
+        "laugh" : ['로맨스','모험','애니메이션'],
+        "neutral" : ['코미디','공포','액션','스릴러','전쟁'],
+        "sad" : ['가족','드라마','다큐멘터리'],
+        "surprise":['음악','코미디','모험'],
+        "smile" : ['코미디','공포','액션','스릴러','전쟁'],
+        "talking" : ['SF','판타지','범죄','역사','서부']
+      }
+      
+    }
+  },
+  computed:{
+    ...mapState([
+      'recom_list',
+    ]),
+    imageUrl: function(){
+      const imagePath = this.movieCard['poster_path']
+      return `https://image.tmdb.org/t/p/original${imagePath}`
+    },
+    playIcon:function(){
+      return this.isplay ? 'mdi-stop-circle-outline' : 'mdi-arrow-right-drop-circle'
     }
   },
   methods:{
-    onInput:function(){
-      this.file = this.$refs.file.files[0]
-      // const url = URL.createObjectURL(file)
-  },
+    shuffle:function(){
+      if (this.recom_list){
+        this.recoms = _.sampleSize(this.recom_list,10)
+      }
+    },
+    play:function(){
+      if (this.isplay){
+        this.isplay = false
+      }
+      else {
+      this.isplay = true
+      }
+    },
+    select:function(){
+      this.isfileNull = false
+    },
     recommend:function(){
-      const formData = new FormData()
-      formData.append('image', this.file)
+      if (this.files == null){
+        this.isfileNull = true
+      } else {
+      let image = new FormData()
+      image.append('files', this.files)
+      if (this.files === ''){
+        image.append('files',[])
+      } else {
+        for (let i=0; i<this.files.length; i++){
+          image.append('files',this.files[i])
+        }
+      }
+      const token = localStorage.getItem('jwt')
+
       axios({
         method: 'post',
-        url: this.api_url,
+        url:`http://127.0.0.1:8000/accounts/upload/`,
+        data: image,
         headers: {
           "Content-Type":'multipart/form-data',
-          "Access-Control-Allow-Origin" : "*",
-          "Access-Control-Allow-Headers" : "Origin, X-Requested-With, Content-Type, Cookie,Accept,X-PINGOTHER",
-          "Access-Control-Allow-Methods":'GET,POST,OPTIONS',
-          "Access-Control-Allow-Credentials":true,
-          "X-Naver-Client-Id": this.Client_ID,
-          "X-Naver-Client-Secret": this.Client_Secret,
+          'Authorization' : `JWT ${token}`
         },
-        data: formData
       })
       .then(res=>{
-        console.log(res)
-      })
-
-
-//       const FormData = require("form-data");
-//       const axios = require("axios");
-//       const fs = require("fs");
-//       const path = require("path");
-//       var request = require("request");
-
-//     const face_detect_api_url = "https://openapi.naver.com/v1/vision/face";
-
-//     const NAVER_CLIENT_ID = "oTXX6kMwz__NOqLgy4dH";
-//     const NAVER_CLIENT_SECRET = "L5ot3Ah5zY";
-
-//     // axios 사용하는 방법
-
-// // node환경에서 FormData를 넣기위해 form-data를 사용하실 수 있습니다.
-// // https://github.com/form-data/form-data
-// // axios에서도 이 방법을 소개하고 있네요!
-// // https://github.com/axios/axios#form-data
-//     var form = new FormData();
-//     form.append("image", this.$refs['file'].files[0]);
-
-//     axios
-//     .post(face_detect_api_url, form, {
-//     headers: {
-//       // axios에서는 content-type을 자동으로 바꿔주지 않기 때문에
-//       // 다음과 같이 header를 넣어주어야 합니다
-//       // ...form.getHeaders(),
-//       'Accept': 'text/html',
-//       "X-Naver-Client-Id": NAVER_CLIENT_ID,
-//       "X-Naver-Client-Secret": NAVER_CLIENT_SECRET,
-//       },
-//     })
-//     .then((response) => {
-//       console.log(response.data);
-//     })
-//     .catch(err=>{
-//       console.log(err)
-//     })
-// // request 이용하는 방법
-
-// // https://developers.naver.com/docs/clova/api/CFR/API_Guide.md#Nodejs
-// var _formData = {
-//   image: fs.createReadStream(__dirname + "/sample.jpg"),
-// };
-
-// request
-// .post({
-//   url: celeb_api_url,
-//   formData: _formData,
-//   headers: {
-//     "X-Naver-Client-Id": NAVER_CLIENT_ID,
-//     "X-Naver-Client-Secret": NAVER_CLIENT_SECRET,
-//   },
-// })
-// .on("response", function (response) {
-//   console.log(response.statusCode); // 200
-//   console.log(response.headers["content-type"]);
-// });
-
-
-
-
-
-      // var _formData = {
-      //   image : "image",
-      //   image : fs.createReadStream(path.join(__dirname + "/sean.jpg")),
-      // }
-      // let _req = axios({
-      //   method:'POST',
-      //   url: this.api_url,
-      //   headers:{
-      //     "Content-Type": "multipart/form-data;",
-      //     "X-Naver-Client-Id" : this.Client_ID, 
-      //     "X-Naver-Client-Secret":this.Client_Secret,
-      //   },
-      //   formData : _formData,
-      // })
-
-      // let _req= axios.post(this.api_url, _formData, {
-      //   'X-Naver-Client-Id' : this.Client_ID, 'X-Naver-Client-Secret':this.Client_Secret,
-      // })
-      // .then((result)=>{
-      //   console.log(result)
-      //   res.json(_req);
-      // })
-      // .catch(err=>{
-      //   console.error(err);
-      //   next(err);
-      // })
-
-      // var _req = request.post({
-      //   url:this.api_url,
-      //   formData : _formData,
-      //   headers:{
-      //     'X-Naver-Client-Id' : this.Client_ID, 'X-Naver-Client-Secret':this.Client_Secret,
-      //   },
-      // })
-      // .on("response", function(response){
-      //   console.log(response.statusCode)
-      //   console.log(response.headers["content-type"])
-      // })
-      // console.log(request.head)
-      // console.log(_req)
-      // _req.pipe(res)
-
-
-      // axios({
-      //   method:'post',
-      //   url: this.api_url,
-      //   headers:{}
+        var d = JSON.parse(res.data)
+        this.face = d.faces[0]
+        this.$store.dispatch('RecomMovie',this.genre[this.face.emotion.value])
+        setTimeout(()=>this.shuffle(), 300)
         
-      // })
-    }
-  },
+      })
+      }
 
-}
+
+    }
+  }}
 </script>
 
 <style>
+.v-file-input{
+  margin-bottom: 10px;
+  padding-top: 5px;
+  padding-right: 10px;
+  background-color: rgb(135, 161, 89);
+  width:230px;
+  height: 45px;
+}
+
+.v-window__prev{
+  display: none;
+}
+.v-window__next{
+  display: none;
+}
 
 </style>

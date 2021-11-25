@@ -4,7 +4,7 @@
       <a class="btn btn-line pt-0 dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
         My Profile
       </a>
-
+      
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
         <li v-if="!isLogin"><router-link :to="{ name: 'Signup'}" class="dropdown-item" >Signup</router-link></li>
         <li v-if="!isLogin"><router-link :to="{ name: 'Login'}" class="dropdown-item">Login</router-link></li>
@@ -36,6 +36,7 @@ export default {
       this.$store.dispatch('userStore/removeLoginUser')
       this.$router.push({name:'Login'})
       this.$store.dispatch('Logout')
+      this.isLogin = false
     }
   },
   computed:{

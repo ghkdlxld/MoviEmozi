@@ -20,7 +20,7 @@
     </div>
     <br>
     <div align='left'>
-      <span id="user">작성자 : {{detail.user}} </span>
+      <v-btn text style="color:white;"><span id="user" @click="moveTomy(detail.user)">작성자 : {{detail.user}} </span></v-btn>
     </div>
     <br>
     <div align="left">
@@ -127,6 +127,9 @@ export default {
     ),
   },
   methods:{
+    moveTomy:function(name){
+      this.$router.push({name:'MyProfile',params:{username:name}})
+    },
     imageUrl : function(){
       const movieId = this.movieTitle.indexOf(this.detail.movie)
       const imagePath = this.movieList[movieId]['poster_path']
