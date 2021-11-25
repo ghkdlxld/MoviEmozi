@@ -11,6 +11,7 @@ import ReviewDetail from '@/views/community/ReviewDetail.vue'
 import ReviewList from '@/views/community/ReviewList.vue'
 import BoardCreate from '@/views/community/BoardCreate.vue'
 import ReviewCreate from '@/views/community/ReviewCreate.vue'
+import cardGame from '@/views/cardGame.vue'
 
 Vue.use(VueRouter)
 
@@ -80,6 +81,11 @@ const routes = [
     path: '/profilebar/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/profilebar/cardgame/',
+    name: 'cardGame',
+    component: cardGame
   },
 ]
 

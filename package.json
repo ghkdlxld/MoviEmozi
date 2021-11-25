@@ -2,7 +2,6 @@
   "name": "final-pjt-front",
   "version": "0.1.0",
   "private": true,
-  "proxy" : "https://openapi.naver.com",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
