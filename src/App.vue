@@ -8,7 +8,7 @@
         <v-img v-bind="props" gradient="to top right,   rgba(25,32,72,.7), rgba(117, 116, 204, 0.5)">
         </v-img>
       </template>
-    <div id="nav" class="d-flex">
+    <div id="nav" class="d-flex" >
      <div style="width:200px; padding-left:20px; white-space:no-wrap;" class="detailfont"><router-link :to="{ name: 'Home'}">
        <div class="titlesize">MoviEmozi</div></router-link></div>
     
@@ -96,7 +96,6 @@ export default {
   color: #2c3e50;
 }
 #img_bar {border:none;}
-
 
 #nav a {
   font-weight: bold;
