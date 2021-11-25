@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-card class="overflow-hidden">
-      <v-app-bar color="#43a047" style="height:100px; padding-bottom:30px;"
+      <v-app-bar color="#43a047" style="height:100px;"
       :style="{'background-image': 'url(' + require('@/assets/background_img.jpg') +')'}" fade-img-on-scroll shrink-on-scroll
       scroll-target="#scrolling">
       <template v-slot:img="{props}">
@@ -97,9 +97,6 @@ export default {
 }
 #img_bar {border:none;}
 
-#nav {
-  padding: 30px;
-}
 
 #nav a {
   font-weight: bold;
