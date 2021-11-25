@@ -1,22 +1,44 @@
 <template>
   <div class="grid">
   <ul class="list">
-    <li class="gamecard" :style="`background-color: red;`"></li>
-    <li class="gamecard"></li>
-    <li class="gamecard"></li>
-    <li class="gamecard"></li>
-    <li class="gamecard"></li>
-    <li class="gamecard"></li>
-    <li class="gamecard"></li>
-    <li class="gamecard"></li>
-    <li class="gamecard gg"></li>
-    <li class="gamecard"></li>
+      <button type="button" id="something0">
+      <img class="gamecard" id="something0" :src="imageUrl[0]"></button>
+
+      <button type="button" id="something0">
+      <img class="gamecard" id="something0" :src="imageUrl[1]"></button>
+
+      <button type="button" id="something0">
+      <img class="gamecard" id="something0" :src="imageUrl[2]"></button>
+
+      <button type="button" id="something0">
+      <img class="gamecard" id="something0" :src="imageUrl[3]"></button>
+
+      <button type="button" id="something0">
+      <img class="gamecard" id="something0" :src="imageUrl[4]"></button>
+
+
+      <button type="button" id="something0">
+      <img class="gamecard" id="something0" :src="imageUrl[5]"></button>
+
+
+      <button type="button" id="something0">
+      <img class="gamecard" id="something0" :src="imageUrl[6]"></button>
+
+      <button type="button" id="something0">
+      <img class="gamecard" id="something0" :src="imageUrl[7]"></button>
+
+      <button type="button" id="something0">
+      <img class="gamecard" id="something0" :src="imageUrl[8]"></button>
+
+      <button type="button" id="something0">
+      <img class="gamecard" id="something0" :src="imageUrl[9]"></button>
   </ul>
-  
-  <button class="stack btn btn-success"
-  @click="stack()">Stack</button>
-  <button class="spread btn btn-warning"
-  @click="spread()">Spread</button>
+  <div>
+    <button class="stack btn btn-outline-warning mx-5"
+    @click="[stack(), shuffleCard()]">영화 다시뽑기</button>
+    <button class="spread btn btn-outline-success"
+    @click="spread()">펼쳐 보기</button>
+  </div>
   
 </div>
 </template>
@@ -24,6 +46,7 @@
 <script>
 import _ from 'lodash'
 import axios from 'axios'
+
 
 export default {
   name: 'gamecardGame',
@@ -33,6 +56,9 @@ export default {
     return {
       movieAll: null,
       gamecards: [],
+      imageUrl: [],
+
+      on0: false,
     }
   },
   methods: {
@@ -46,6 +72,22 @@ export default {
       }
       return gamecards;
     },
+    shuffleCard: function() {
+      
+      let random = _.sampleSize(this.movieAll, 10)
+      let movies = []
+      for (var ran of random) {
+        movies.push(ran)
+      }
+      this.gamecards = movies
+      let list = []
+      for (var card of this.gamecards) {
+        const imgSrc = `https://image.tmdb.org/t/p/original${card['poster_path']}`
+        list.push(imgSrc)
+      }
+      this.imageUrl = list
+    },
+
 
     imgUrl: function(gamecard){
       const imagePath = gamecard['poster_path']
@@ -68,7 +110,13 @@ export default {
       gamecards[e].setAttribute("class", "gamecard ani" + e);
         }, e * 150)
       })
-    }
+    },
+    showFront: function() {
+
+    
+    
+    },
+
   },
   computed: {
   },
@@ -81,21 +129,35 @@ export default {
     .then(res => {
       this.movieAll = res.data
 
-      let random = _.sampleSize(this.movieAll, 5)
+      let random = _.sampleSize(this.movieAll, 10)
       let movies = []
       for (var ran of random) {
         movies.push(ran)
-        movies.push(ran)
       }
       this.gamecards = movies
-      console.log(this.gamecards)
       this.gamecards = this.shuffle(this.gamecards)
+
+      let list = []
+      for (var gamecard of this.gamecards) {
+        const imagePath = gamecard['poster_path']
+        list.push(`https://image.tmdb.org/t/p/original${imagePath}`)
+      }
+      this.imageUrl = list
     })
-  }
+  },
 }
 </script>
 
 <style>
+.container {
+  position: relative;
+  margin: 10px 0 20px 0;
+  -webkit-perspective: 1000;
+  -moz-perspective: 1000;
+  -ms-perspective: 1000;
+  -o-perspective: 1000;
+}
+
 .grid {
   width: 1170px;
   margin: 0 auto;
@@ -118,11 +180,12 @@ export default {
   float: left;
   width: 222px;
   height: 311px;
-  background-color: #eee;
+  background-color: rgb(0, 0, 0);
   position: absolute;
   right: 0;
   bottom: 0;
   margin: 30px 0 15px 15px;
+  transition: 2s;
 }
 .gamecard:nth-child(5n) {
   margin-right: 0;
@@ -163,4 +226,14 @@ export default {
   right: 237px;
   bottom: 0;
 }
+
+.jb1 {
+  backface-visibility: visible;
+}
+
+#something0 :hover {
+  transform: rotateY( 180deg )
+}
+
+
 </style>
