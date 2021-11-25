@@ -35,7 +35,7 @@
         <div v-if="following_name.length !== 0">
         <v-list-item v-for="(person,i) in following_name" :key="i" >
           <div style="border-bottom-color:white;">
-          {{person}}
+          <v-btn text style="color:white;"><span @click="moveTomy(person)">{{person}} </span></v-btn>
 
           </div>
         
@@ -59,8 +59,7 @@
       <v-list>
         <div v-if="follower_name.length !== 0">
         <v-list-item v-for="(person,i) in follower_name" :key="i" style="border-bottom: 1px solid black;">
-          {{person}}
-         
+         <v-btn text style="color:white;"><span @click="moveTomy(person)">{{person}} </span></v-btn>
         </v-list-item>
           </div>
         <div v-else>
@@ -246,7 +245,9 @@ export default {
     //   }
     //   // this.preview = URL.createObjectURL(this.files[0])
     // },
-
+    moveTomy:function(name){
+      this.$router.push({name:'MyProfile',params:{username:name}})
+    },
     sendImage(){
       if (this.files === null){
         this.isfileNull = true
@@ -445,7 +446,7 @@ export default {
   margin-bottom: 10px;
   padding-top: 5px;
   padding-right: 10px;
-  background-color: rgb(135, 161, 89);
+  background-color: rgba(117, 116, 204, 0.7);
   width:310px;
   height: 45px;
 }

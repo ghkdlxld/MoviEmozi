@@ -149,14 +149,6 @@ export default {
 </script>
 
 <style>
-.container {
-  position: relative;
-  margin: 10px 0 20px 0;
-  -webkit-perspective: 1000;
-  -moz-perspective: 1000;
-  -ms-perspective: 1000;
-  -o-perspective: 1000;
-}
 
 .grid {
   width: 1170px;

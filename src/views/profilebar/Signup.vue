@@ -1,9 +1,9 @@
 <template>
-  <div style="color:white;">
+  <div style="color:white;" align="center">
     <h1>Signup</h1>
     <v-container id="signup">
-      <v-row>
-      <v-form ref="form" lazy-validation v-model="valid">
+      <v-row >
+      <v-form ref="form" lazy-validation v-model="valid" >
       <v-col align="center">
       <v-text-field
       style="width:250px;"
@@ -57,6 +57,9 @@
 
 <script>
 import axios from 'axios'
+import {mapState} from 'vuex'
+
+const userStore = 'userStore'
 
 export default {
   name: 'Signup',
@@ -119,8 +122,16 @@ export default {
       })
     }
   },
+  computed:{
+    ...mapState(
+      userStore,
+      ['LoginUser',]
+    ),
+  },
   created:function(){
-
+    if (this.LoginUser){
+      this.$router.push({name:'Home'})
+    }
   }
 }
 </script>
@@ -135,8 +146,7 @@ export default {
   color:rgb(173, 7, 7);
   font-size:15px;
   padding-top: 10px;
-  color:rgb(135, 161, 89)
-}
+  color:rgba(117, 116, 204)}
 
 .reset{
   margin-bottom: 20px;
@@ -147,14 +157,16 @@ export default {
 }
 
 .isvalid  {
-  background-color: yellowgreen;
+  background-color: rgba(117, 116, 204);
 }
 .theme--light.v-input input, .theme--light.v-input textarea{
   color:white;
 }
 
 #signup{
-  border: 2px solid rgb(152, 182, 95);
+  width:650px;
+  border: 2px solid rgba(117, 116, 204);
+  border-radius: 30px;
 }
 
 #input-14{

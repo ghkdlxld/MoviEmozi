@@ -1,18 +1,44 @@
 <template>
   <div style="color:white;">
     <h1>Login</h1>
-    <div>
-      <label for="username">UserName:  </label>
-      <input type="text" id="username" v-model="user.username">
-    </div>
-    <br>
-    <div>
-      <label for="password">password:   </label>
-      <input type="text" id="password" v-model="user.password"
-      @keyup.enter="Login">
-    </div>
-    <br>
-    <button @click="Login">Login</button>
+    <v-container id="login">
+      <v-row>
+      <v-form ref="form" lazy-validation v-model="valid">
+      <v-col align="center">
+      <v-text-field
+      style="width:250px;"
+      light
+      v-model="user.username"
+      :counter="10"
+      :rules="nameRules"
+      label="userName"
+      required
+      >
+      </v-text-field>
+      </v-col>
+      <v-col align="center">
+      <v-text-field
+      style="width:300px;"
+      v-model="user.password"
+      :rules="passwordRules"
+      label="password"
+      required
+      >
+      </v-text-field>
+      </v-col>
+
+      <v-btn :class="{isvalid : !valid}" class="mx-4 my-4" @click="validate" style="margin-bottom: 20px;">
+        Login
+      </v-btn>
+      <v-btn class="mx-4 reset px-3 my-4" @click="reset">
+        Reset
+      </v-btn>
+      <v-btn @click="resetValidate" class="reset_valid mx-4 px-3 my-4">Reset Error</v-btn>
+
+    </v-form>
+        
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -27,10 +53,27 @@ export default {
       user:{
         username:null,
         password : null,
-      }
+      },
+      valid : true,
+      nameRules:[
+        v=> !!v || '이름은 필수 입력사항입니다.',
+        v => (v && v.length <= 10) || '이름은 10글자를 넘을 수 없습니다.',],
+      passwordRules:[
+        v=>!!v || '비밀번호는 필수 입력사항입니다.',],
     }
   },
   methods:{
+    validate () {
+      if(this.$refs.form.validate()){
+        this.Login()
+      }
+    },
+    reset () {
+      this.$refs.form.reset()
+    },
+    resetValidate () {
+      this.$refs.form.resetValidation()
+    },
     Login : function(){
       axios({
         method:'post',
@@ -61,14 +104,21 @@ export default {
         this.$router.push({name:'Home'})
         }
       })
-      .catch(err=>{
-        console.log(err)
+      .catch(()=>{
+        alert('아이디 또는 비밀번호가 잘못 입력 되었습니다. 아이디와 비밀번호를 정확히 입력해 주세요!')
+        this.$refs.form.reset()
       })
+
     }
   }
 }
 </script>
 
 <style>
-
+#login{
+  width:600px;
+  height: 300px;
+  border: 2px solid rgba(117, 116, 204);
+  border-radius: 30px;
+}
 </style>

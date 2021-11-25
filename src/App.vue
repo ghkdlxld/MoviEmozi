@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <v-card class="overflow-hidden">
-      <v-app-bar color="#43a047" style="height:100px; padding-bottom:30px;"
+    <v-card class="overflow-hidden" id="img_bar">
+      <v-app-bar color="#43a047" style="padding-bottom:30px; box-shadow:blur;"
       :src="require(`@/assets/bar.jpg`)" fade-img-on-scroll shrink-on-scroll
       scroll-target="#scrolling">
       <template v-slot:img="{props}">
-        <v-img v-bind="props" gradient="to top right,  rgba(117, 116, 204, 0.7), rgba(25,32,72,.7)">
+        <v-img v-bind="props" gradient="to top right,   rgba(25,32,72,.7), rgba(117, 116, 204, 0.5)">
         </v-img>
       </template>
-    <div id="nav" class="d-flex">
-     <v-app-bar-title style="width:300px; padding-left:20px; white-space:no-wrap;"><router-link :to="{ name: 'Home'}">MoviEmozi</router-link></v-app-bar-title> 
+    <div id="nav" class="d-flex" style="padding-top:0px;">
+     <div style="width:200px;"><router-link :to="{ name: 'Home'}">MoviEmozi</router-link></div> 
     
        <v-spacer></v-spacer>
       <div style="display:flex;">
@@ -17,13 +17,13 @@
         <!-- Community => 자유, Review, 건의 -->
         <router-link :to="{ name: 'Community'}" class="mx-2">Community</router-link>  |
         <router-link :to="{ name: 'QuestionList' }" class="mx-2">1:1 문의</router-link>  |
-        <router-link :to="{ name: 'cardGame' }" class="mx-2">영화 추천</router-link>
+        <router-link :to="{ name: 'cardGame' }" class="mx-2">영화 추천</router-link> |
         <!-- profile drop down => profile logout / signup login -->
-        <the-profile-bar :isLogin="isLogin"></the-profile-bar>
+        <the-profile-bar id="profile-bar" :isLogin="isLogin"></the-profile-bar>
         </div>
     </div>
       </v-app-bar>
-      <v-sheet id="scrolling" class="overflow-y-auto" style="background-color:black; padding-top:30px;">
+      <v-sheet id="scrolling" class="overflow-y-auto" style="padding-top:30px;">
 
         <router-view :key="$route.fullPath" @login="isLogin=true" @logout="isLogin=false"/>
 
@@ -31,6 +31,7 @@
     </v-card>
 
   </div>
+
 </template>
 
 <script>
@@ -64,23 +65,46 @@ export default {
 
 
 <style>
-#app {
+.v-toolbar__image{
+  background: linear-gradient(
+    to bottom,
+    rgba(20, 20, 20, 0) 10%,
+    rgba(20, 20, 20, 0.25) 25%,
+    rgba(20, 20, 20, 0.5) 50%,
+    rgba(20, 20, 20, 0.75) 75%,
+    rgba(20, 20, 20, 1) 100%
+  );
+}
+
+#scrolling{
+  /* background: linear-gradient(rgb(147, 147, 212), 10%, rgb(233, 192, 198)); */
+  background: rgb(19, 19, 19); 
+}
+
+#app{
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
 }
+.dropdown-toggle {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+#img_bar {border:none;}
 
 #nav {
-  margin-bottom: 20px;
+  padding: 30px;
 }
 
 #nav a {
   font-weight: bold;
-  color: silver;
+  color: rgb(192, 189, 189);
   text-decoration: none;
-  font-size : 20px;
 }
 
 #nav a.router-link-exact-active {
@@ -90,45 +114,4 @@ export default {
 .v-toolbar__content, .v-toolbar__extension{
   display: inline !important;
 }
-
-.wrap {
-    width: 100%;
-    height: 100%;
-    background: #fff;
-    position: relative;
-    overflow:hidden;
-    background-color: #fff;
-    background-image: 
-        radial-gradient(at top left, #84e27b, transparent),
-        radial-gradient(at top right, #bdffe4, transparent),
-        radial-gradient(at bottom left, #0a4c7b, transparent);
-  }
-  .aurora-base {
-    position: absolute;
-    filter: blur(50px);
-    opacity: 0.7;
-  }
-  .aurora-one {
-    width: 500px;
-    height: 600px;
-    background-color: #50c8ec;
-    left:-50px;
-    top:-300px;
-    z-index: 3; /* 첫 번째 그라데이션이 맨 앞으로 오도록 조정 */
-  }
-  .aurora-two {
-    width: 800px;
-    height: 800px;
-    background-color: #339c4e;
-    bottom:-30px;
-    left:-80px;
-  }
-  .aurora-three {
-    border-radius: 50%; /* 그라데이션이 부드럽게 겹치도록 영역을 좀더 둥글게 */
-    width: 450px;
-    height: 450px;
-    bottom:-80px;
-    right:-200px;
-    background-color: #6658b3;
-  }
 </style>

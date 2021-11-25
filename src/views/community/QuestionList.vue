@@ -3,8 +3,11 @@
     <h3 style="color:white">1:1 문의</h3>
     <hr>
     <v-row>
-      <v-col cols="auto">
+      <v-col cols="6" align="left">
       <v-btn tile outlined style="color:silver;" @click="chatsCreate">Create</v-btn>
+      </v-col>
+      <v-col cols="6" align="right">
+      <v-btn tile outlined style="color:silver;" @click="moveAdmin">Admin</v-btn>
       </v-col>
     </v-row>
     <board-list-item
@@ -17,7 +20,8 @@
 <script>
 import BoardListItem from './BoardListItem.vue'
 import {mapState} from 'vuex'
-
+import axios from 'axios'
+const userStore = 'userStore'
 
 export default {
   name: 'Question',
@@ -25,6 +29,19 @@ export default {
     BoardListItem,
   },
   methods:{
+    moveAdmin:function(){
+      if (this.LoginUser === 'admin'){
+        axios({
+          method:'get',
+          url:'http://127.0.0.1:8000/admin/'
+        })
+        .then(res=>{
+          window.open(res.config.url)
+        })
+      } else{
+        alert('관리자만 접근할 수 있습니다!')
+      }
+    },
     chatsCreate:function(){
       if (this.isLogin){
       this.$router.push({name:'BoardCreate', query:{category:'question'}})
@@ -38,6 +55,10 @@ export default {
       'boardLists',
       'isLogin',
     ]),
+    ...mapState(
+      userStore,
+      ['LoginUser',]
+    ),
     filtering:function(){
       const questions = []
 

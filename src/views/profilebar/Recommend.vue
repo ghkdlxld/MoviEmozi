@@ -151,7 +151,7 @@ export default {
   margin-bottom: 10px;
   padding-top: 5px;
   padding-right: 10px;
-  background-color: rgb(135, 161, 89);
+  background-color: rgba(117, 116, 204, 0.7);
   width:230px;
   height: 45px;
 }

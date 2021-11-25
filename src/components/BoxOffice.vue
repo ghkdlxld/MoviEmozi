@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="text-white">Boxoffice Top 10</h1>
-    <div class="container">
+    <div >
       <carousel-3d  
       :controls-visible="true" 
       :controls-prev-html="'&#10092;'" 

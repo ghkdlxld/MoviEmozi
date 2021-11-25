@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="dropdown">
-      <a class="btn btn-line pt-0 dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-        My Profile
+      <a class="btn btn-line pt-0 dropdown-toggle" style="font-size:20px;" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+     My Profile
       </a>
       
       <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink" >
@@ -11,6 +11,7 @@
 
         <li v-if="isLogin"><router-link :to="{ name: 'MyProfile', params:{username:LoginUser}}" class="dropdown-item" >My Profile</router-link></li>
         <li v-if="isLogin"><router-link to="." class="dropdown-item" @click.native="logout">Logout</router-link></li>
+      
       </ul>
     </div>
   </div>
