@@ -1,16 +1,16 @@
 <template>
   <div class="grid">
   <ul class="list">
-    <li class="card" :style="`background-color: red;`"></li>
-    <li class="card"></li>
-    <li class="card"></li>
-    <li class="card"></li>
-    <li class="card"></li>
-    <li class="card"></li>
-    <li class="card"></li>
-    <li class="card"></li>
-    <li class="card gg"></li>
-    <li class="card"></li>
+    <li class="gamecard" :style="`background-color: red;`"></li>
+    <li class="gamecard"></li>
+    <li class="gamecard"></li>
+    <li class="gamecard"></li>
+    <li class="gamecard"></li>
+    <li class="gamecard"></li>
+    <li class="gamecard"></li>
+    <li class="gamecard"></li>
+    <li class="gamecard gg"></li>
+    <li class="gamecard"></li>
   </ul>
   
   <button class="stack btn btn-success"
@@ -26,46 +26,46 @@ import _ from 'lodash'
 import axios from 'axios'
 
 export default {
-  name: 'cardGame',
+  name: 'gamecardGame',
   components: {
   },
   data: function () {
     return {
       movieAll: null,
-      cards: [],
+      gamecards: [],
     }
   },
   methods: {
-    shuffle: (cards) => {
-      for (let i = 0; i < cards.length; i++) {
+    shuffle: (gamecards) => {
+      for (let i = 0; i < gamecards.length; i++) {
         //Fisher-Yates shuffle
         const rnd = Math.random() * i | 0;
-        const tmp = cards[i];
-        cards[i] = cards[rnd];
-        cards[rnd] = tmp;
+        const tmp = gamecards[i];
+        gamecards[i] = gamecards[rnd];
+        gamecards[rnd] = tmp;
       }
-      return cards;
+      return gamecards;
     },
 
-    imgUrl: function(card){
-      const imagePath = card['poster_path']
+    imgUrl: function(gamecard){
+      const imagePath = gamecard['poster_path']
       return `https://image.tmdb.org/t/p/original${imagePath}`
     },
 
     stack: function () {
-      const cards = document.querySelectorAll('.card')
-      cards.forEach((card, e) => {
+      const gamecards = document.querySelectorAll('.gamecard')
+      gamecards.forEach((gamecard, e) => {
         setTimeout(function() {
-          cards[e].setAttribute('class', 'card')
+          gamecards[e].setAttribute('class', 'gamecard')
         }, e*150)
       })
     },
 
     spread: function() {
-      const cards = document.querySelectorAll('.card')
-      cards.forEach((card, e)=> {
+      const gamecards = document.querySelectorAll('.gamecard')
+      gamecards.forEach((gamecard, e)=> {
       setTimeout(function() {
-      cards[e].setAttribute("class", "card ani" + e);
+      gamecards[e].setAttribute("class", "gamecard ani" + e);
         }, e * 150)
       })
     }
@@ -87,9 +87,9 @@ export default {
         movies.push(ran)
         movies.push(ran)
       }
-      this.cards = movies
-      console.log(this.cards)
-      this.cards = this.shuffle(this.cards)
+      this.gamecards = movies
+      console.log(this.gamecards)
+      this.gamecards = this.shuffle(this.gamecards)
     })
   }
 }
@@ -108,7 +108,7 @@ export default {
   padding-left: 0;
 }
 
-.card {
+.gamecard {
   transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   perspective: 1000;
   -ms-transform: perspective(1000px);
@@ -124,42 +124,42 @@ export default {
   bottom: 0;
   margin: 30px 0 15px 15px;
 }
-.card:nth-child(5n) {
+.gamecard:nth-child(5n) {
   margin-right: 0;
 }
-.card.ani0 {
+.gamecard.ani0 {
   right: 948px;
   bottom: 326px;
 }
-.card.ani1 {
+.gamecard.ani1 {
   right: 711px;
   bottom: 326px;
 }
-.card.ani2 {
+.gamecard.ani2 {
   right: 474px;
   bottom: 326px;
 }
-.card.ani3 {
+.gamecard.ani3 {
   right: 237px;
   bottom: 326px;
 }
-.card.ani4 {
+.gamecard.ani4 {
   right: 0;
   bottom: 326px;
 }
-.card.ani5 {
+.gamecard.ani5 {
   right: 948px;
   bottom: 0;
 }
-.card.ani6 {
+.gamecard.ani6 {
   right: 711px;
   bottom: 0;
 }
-.card.ani7 {
+.gamecard.ani7 {
   right: 474px;
   bottom: 0;
 }
-.card.ani8 {
+.gamecard.ani8 {
   right: 237px;
   bottom: 0;
 }
