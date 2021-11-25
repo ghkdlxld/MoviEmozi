@@ -12,7 +12,8 @@
           >
             <button 
             v-show="Detail"
-            class="search-this-movie card bg-dark" 
+            id="search-this-movie"
+            class="card bg-dark" 
             style="border-box; width: 13rem; height: 310px; opacity: 0.7;"
             data-bs-toggle="modal" :data-bs-target="`#exampleModal-${movieCard.id}`"
             @click="[getVideo(), getShortMent(), getStarAvg(), getLikeState()]">
@@ -69,10 +70,12 @@
                 <span class="mx-3">개봉일 {{ movieCard.release_date}} </span>
               </div>
             </header>
-            <div class="d-flex flex-column justify-content-center align-items-center">
-              <iframe id="ytplayer" type="text/html" width="850" height="430" :src="videoUrl" frameborder="0" class="rounded rounded-3"></iframe>
+            <div class="container d-flex flex-column justify-content-center align-items-center mb-2" 
+            style="background-color:rgba(0,0,0,0.45); width:920px; border-radius: 15px;">
+              <iframe id="ytplayer" type="text/html" width="850" height="430" :src="videoUrl" frameborder="0" 
+              class="rounded rounded-3 mt-3"></iframe>
               <hr>
-              <div class="fs-6 mb-5 text-center lh-lg" style="width:850px;">{{movieCard.overview}}</div>
+              <div class="fs-6 mb-2 text-center lh-lg" style="width:850px;">{{movieCard.overview}}</div>
             </div>
             <div class="container" style="width:970px;">
               <h4 class="text-start mt-4">한줄평</h4>
@@ -388,6 +391,7 @@ export default {
         })
         .then(() => {
           this.stars = Array(5).fill(false)
+          
           this.getStarAvg()
         })
       }
@@ -430,7 +434,7 @@ export default {
           const user_pk = this.userNameList.indexOf(this.LoginUser)
           axios({
             method: 'put',
-            url: `http://127.0.0.1:8000/movies/${user_pk}/rank_update/`,
+            url: `http://127.0.0.1:8000/movies/ranks/${user_pk}/rank_update/`,
             data: {rank:countStar},
             headers: this.$store.state.config
           })
@@ -448,7 +452,7 @@ export default {
         const user_pk = this.userNameList.indexOf(this.LoginUser)
         axios({
           method: 'delete',
-          url: `http://127.0.0.1:8000/movies/${user_pk}/rank_update/`,
+          url: `http://127.0.0.1:8000/movies/ranks/${user_pk}/rank_update/`,
           headers: this.$store.state.config
         })
         .then(()=>{
@@ -487,12 +491,6 @@ export default {
         this.isLike = res.data.liked
       })
     },
-
-    searchMovie: function (searchThisMovie) {
-      this.movieCard = searchThisMovie
-      document.querySelector('.search-this-movie').click()
-      this.searchThisMovie = null
-    }
   },
 
   computed:{
@@ -532,9 +530,6 @@ export default {
 </script>
 
 <style>
-  * {
-      box-sizing:border-box;
-  }
   .modal {
     color: rgb(184, 184, 184);
   }

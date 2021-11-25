@@ -10,18 +10,17 @@
 
       <the-search-bar 
       :movie-all="movieAll"
-      @search-movie="searchMovie"
       ></the-search-bar>
+      
+
 
     </div>
-    <div class="home d-flex" style="flex-wrap:wrap;">
-    <transition-group tag="div" name="cell" class="containerr">
+    <div class="home" style="flex-wrap:wrap;">
+    <transition-group tag="div" name="cell" class="container111">
       <movie-card
-      id="slow"
-      v-for="(movieCard, i) in showMovieList"
-      :key="i"
+      v-for="movieCard in showMovieList"
+      :key="movieCard.id"
       :movieCard="movieCard"
-      ref="searchMovie"
       class="col-lg-2 col-md-3 col-sm-4 my-3 cell"
       >
       </movie-card>
@@ -145,8 +144,6 @@ export default {
 
     searchMovie: function(searchThisMovie) {
       this.searchThisMovie = searchThisMovie
-      this.$refs.searchMovie(searchThisMovie)
-
     }
   },
 
@@ -173,13 +170,13 @@ export default {
 
 
 <style>
-.containerr {
+.container111 {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
   margin-top: 10px;
 }
 .cell-move {
-  transition: transform 1s;
+  transition: transform 2s;
 }
 </style>

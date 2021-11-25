@@ -3,10 +3,11 @@
     <div id="nav" class="d-flex justify-content-between">
       <router-link :to="{ name: 'Home'}">Home</router-link>
       <div class="d-flex">
+        <!-- <router-link :to="{ name: 'cardGame'}" class="mx-2">Movie Recommend</router-link> | -->
         <!-- Community => 자유, Review, 건의 -->
         <router-link :to="{ name: 'Community'}" class="mx-2">Community</router-link>  |
         <router-link :to="{ name: 'QuestionList' }" class="mx-2">1:1 문의</router-link>  |
-
+        <router-link :to="{ name: 'cardGame' }" class="mx-2">영화 추천</router-link>
         <!-- profile drop down => profile logout / signup login -->
         <the-profile-bar :isLogin="isLogin"></the-profile-bar>
       </div>
@@ -18,10 +19,11 @@
 <script>
 import TheProfileBar from '@/components/TheProfileBar'
 
+
 export default {
   name: 'App',
   components: {
-    TheProfileBar
+    TheProfileBar,
   },
   data:function(){
     return{
